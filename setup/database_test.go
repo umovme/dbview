@@ -15,7 +15,8 @@ var _ = Describe("Setup database user and groups", func() {
 			database: "sebastian"}
 		sampleConnString = "user=sebastian dbname=sebastian"
 
-		testUserName = "dbview"
+		testUserName  = "dbview"
+		wrongUserName = "missing_user_for_this_database"
 	)
 
 	Context("When I connect to the database", func() {
@@ -30,8 +31,8 @@ var _ = Describe("Setup database user and groups", func() {
 
 		It("Should connect to a database", func() {
 			dbConnectionInfo.sslmode = "disable"
-			db, err := connect(dbConnectionInfo)
-			db.Close()
+			_, err := connect(dbConnectionInfo)
+
 			Expect(err).To(BeNil())
 		})
 
@@ -55,7 +56,17 @@ var _ = Describe("Setup database user and groups", func() {
 		})
 
 		It("Should check if user exists before grant a role", func() {
-			err := GrantRolesToUser(dbConnectionInfo, "missing_user_for_this_database", []string{"dbview"})
+			err := GrantRolesToUser(dbConnectionInfo, wrongUserName, []string{"dbview"})
+			Expect(err).To(BeNil())
+		})
+
+		It("Should be possible to update the 'search_path' configuration for the user", func() {
+			err := SetSearchPathForUser(dbConnectionInfo, "sebastian", []string{"dbview", "public"})
+			Expect(err).To(BeNil())
+		})
+
+		It("Should check if user exists before update the 'search_path'", func() {
+			err := SetSearchPathForUser(dbConnectionInfo, wrongUserName, []string{"dbview", "public"})
 			Expect(err).To(BeNil())
 		})
 	})

@@ -44,11 +44,7 @@ func checkIfUserExists(connDetail ConnectionDetails, userName string) (bool, err
 	totalRows := 0
 	err = db.QueryRow("SELECT count(1) FROM pg_roles WHERE rolname = $1", userName).Scan(&totalRows)
 
-	if totalRows > 0 {
-		found = true
-	}
-
-	return found, err
+	return (totalRows > 0), err
 }
 
 /*
@@ -71,7 +67,7 @@ func GrantRolesToUser(connDetail ConnectionDetails, userName string, roles []str
 		return nil
 	}
 
-	for _, role := range roles { // GRANT dbview TO ${DBVIEW_USER};
+	for _, role := range roles {
 		_, err = db.Exec(fmt.Sprintf("GRANT %s to %s;", role, userName))
 		if err != nil {
 			return err
@@ -79,4 +75,29 @@ func GrantRolesToUser(connDetail ConnectionDetails, userName string, roles []str
 	}
 
 	return nil
+}
+
+/*
+SetSearchPathForUser : Set the 'search_path' variable for an user
+*/
+func SetSearchPathForUser(connDetail ConnectionDetails, userName string, schemas []string) error {
+
+	var db *sql.DB
+	var err error
+
+	if db, err = connect(connDetail); err != nil {
+		return err
+	}
+
+	var exists bool
+
+	if exists, err = checkIfUserExists(connDetail, userName); err != nil {
+		return err
+	} else if !exists {
+		// returns if the user not exists
+		return nil
+	}
+
+	_, err = db.Exec(fmt.Sprintf("ALTER ROLE %s SET search_path TO %s;", userName, strings.Join(schemas, ",")))
+	return err
 }
