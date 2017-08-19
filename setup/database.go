@@ -87,3 +87,19 @@ func CheckIfSchemaExists(connDetail ConnectionDetails, schemaName string) (bool,
 
 	return (totalRows > 0), err
 }
+
+/*
+RemoveSchema : Removes a schema and all its contents
+*/
+func RemoveSchema(connDetail ConnectionDetails, schemaName string) error {
+
+	var db *sql.DB
+	var err error
+
+	if db, err = connect(connDetail); err != nil {
+		return err
+	}
+
+	_, err = db.Exec(fmt.Sprintf("DROP SCHEMA IF EXISTS %s CASCADE;", schemaName))
+	return err
+}
