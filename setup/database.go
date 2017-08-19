@@ -47,24 +47,23 @@ func connect(connDetail ConnectionDetails) (*sql.DB, error) {
 CreateUser : Creates a new user in the database
 */
 func CreateUser(connDetail ConnectionDetails, userName string, options []string) error {
+	var db *sql.DB
+	var err error
 
-	db, err := connect(connDetail)
-
-	if err != nil {
+	if db, err = connect(connDetail); err != nil {
 		return err
 	}
 
-	exists, err := checkIfUserExists(connDetail, userName)
+	var exists bool
 
-	if err != nil {
+	if exists, err = checkIfUserExists(connDetail, userName); err != nil {
 		return err
 	} else if exists {
+		// returns if the user already exists
 		return nil
 	}
 
-	_, err = db.Exec("CREATE USER dbview " + strings.Join(options, " ") + ";")
-
-	if err != nil {
+	if _, err = db.Exec("CREATE USER dbview " + strings.Join(options, " ") + ";"); err != nil {
 		return err
 	}
 
@@ -73,10 +72,12 @@ func CreateUser(connDetail ConnectionDetails, userName string, options []string)
 
 func checkIfUserExists(connDetail ConnectionDetails, userName string) (bool, error) {
 
-	found := false
-	db, err := connect(connDetail)
+	var db *sql.DB
+	var err error
 
-	if err != nil {
+	found := false
+
+	if db, err = connect(connDetail); err != nil {
 		return found, err
 	}
 

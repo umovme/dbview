@@ -44,7 +44,7 @@ var _ = Describe("Setup database user and groups", func() {
 			Expect(err).To(BeNil())
 		})
 
-		It("Should create a user in the database if not exists", func() {
+		It("Should create a user in the database", func() {
 			err := CreateUser(dbConnectionInfo, testUserName, []string{"PASSWORD 'super_senha'", "SUPERUSER"})
 			Expect(err).To(BeNil())
 		})
