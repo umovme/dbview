@@ -37,7 +37,7 @@ var _ = Describe("Setup database user and groups", func() {
 
 	})
 
-	Context("When I install the dbview at the database", func() {
+	Context("When I Create the dbview user at the database", func() {
 
 		It("It check if user exists before try to create a new one", func() {
 			_, err := checkIfUserExists(dbConnectionInfo, testUserName)
