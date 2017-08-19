@@ -70,4 +70,21 @@ var _ = Describe("Setup database user and groups", func() {
 			Expect(err).To(BeNil())
 		})
 	})
+
+	Context("When I create a database", func() {
+		It("Should create a new database", func() {
+			err := CreateNewDatabase(dbConnectionInfo, "dbview", nil)
+			Expect(err).To(BeNil())
+		})
+
+		It("Should check if the database exists before create a new one", func() {
+			_, err := checkIfDatabaseExists(dbConnectionInfo, "template1")
+			Expect(err).To(BeNil())
+		})
+
+		It("Should create a some extensions", func() {
+			err := CreateExtensionsInDatabase(dbConnectionInfo, []string{"plpgsql"})
+			Expect(err).To(BeNil())
+		})
+	})
 })
