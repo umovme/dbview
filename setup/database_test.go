@@ -86,5 +86,10 @@ var _ = Describe("Setup database user and groups", func() {
 			err := CreateExtensionsInDatabase(dbConnectionInfo, []string{"plpgsql"})
 			Expect(err).To(BeNil())
 		})
+
+		It("Should check if a schema exists", func() {
+			_, err := CheckIfSchemaExists(dbConnectionInfo, "public")
+			Expect(err).To(BeNil())
+		})
 	})
 })

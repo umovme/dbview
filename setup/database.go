@@ -67,3 +67,23 @@ func CreateExtensionsInDatabase(connDetail ConnectionDetails, extensions []strin
 	}
 	return nil
 }
+
+/*
+CheckIfSchemaExists : Check if the schema exists on the database
+*/
+func CheckIfSchemaExists(connDetail ConnectionDetails, schemaName string) (bool, error) {
+
+	var db *sql.DB
+	var err error
+
+	found := false
+
+	if db, err = connect(connDetail); err != nil {
+		return found, err
+	}
+
+	totalRows := 0
+	err = db.QueryRow("SELECT COUNT(1) FROM pg_namespace WHERE nspname = $1", schemaName).Scan(&totalRows)
+
+	return (totalRows > 0), err
+}
