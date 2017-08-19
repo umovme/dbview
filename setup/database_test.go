@@ -96,5 +96,10 @@ var _ = Describe("Setup database user and groups", func() {
 			err := RemoveSchema(dbConnectionInfo, "u1325")
 			Expect(err).To(BeNil())
 		})
+
+		It("Should create a new schema", func() {
+			err := CreateSchema(dbConnectionInfo, "public")
+			Expect(err).To(BeNil())
+		})
 	})
 })

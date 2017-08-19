@@ -103,3 +103,19 @@ func RemoveSchema(connDetail ConnectionDetails, schemaName string) error {
 	_, err = db.Exec(fmt.Sprintf("DROP SCHEMA IF EXISTS %s CASCADE;", schemaName))
 	return err
 }
+
+/*
+CreateSchema : Create a empty schema
+*/
+func CreateSchema(connDetail ConnectionDetails, schemaName string) error {
+
+	var db *sql.DB
+	var err error
+
+	if db, err = connect(connDetail); err != nil {
+		return err
+	}
+
+	_, err = db.Exec(fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s;", schemaName))
+	return err
+}
