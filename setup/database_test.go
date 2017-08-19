@@ -13,25 +13,25 @@ var _ = Describe("Setup database user and groups", func() {
 		dbConnectionInfo = ConnectionDetails{
 			userName: "sebastian",
 			database: "sebastian"}
-		sampleConnString = "user=sebastian dbname=sebastian sslmode=verify-full"
+		sampleConnString = "user=sebastian dbname=sebastian"
+
+		testUserName = "dbview"
 	)
 
 	Context("When I connect to the database", func() {
 
 		It("Should convert a the connection info to the lib/pq connection", func() {
-
 			Expect(dbConnectionInfo.toString()).To(Equal(sampleConnString))
 		})
 
 		It("Should not set a value in the connection string when it is empty", func() {
-
-			dbConnectionInfo := ConnectionDetails{userName: "sebastian"}
-
-			Expect(dbConnectionInfo.toString()).To(Equal("user=sebastian sslmode=verify-full"))
+			Expect(ConnectionDetails{userName: "sebastian", host: ""}.toString()).To(Equal("user=sebastian"))
 		})
 
 		It("Should connect to a database", func() {
-			err := connect(dbConnectionInfo)
+			dbConnectionInfo.sslmode = "disable"
+			db, err := connect(dbConnectionInfo)
+			db.Close()
 			Expect(err).To(BeNil())
 		})
 
@@ -39,9 +39,13 @@ var _ = Describe("Setup database user and groups", func() {
 
 	Context("When I install the dbview at the database", func() {
 
-		It("Should create a user in the database", func() {
+		It("It check if user exists before try to create a new one", func() {
+			_, err := checkIfUserExists(dbConnectionInfo, testUserName)
+			Expect(err).To(BeNil())
+		})
 
-			err := CreateUser(dbConnectionInfo, "dbview", []string{"SUPERUSER"})
+		It("Should create a user in the database if not exists", func() {
+			err := CreateUser(dbConnectionInfo, testUserName, []string{"PASSWORD 'super_senha'", "SUPERUSER"})
 			Expect(err).To(BeNil())
 		})
 	})
