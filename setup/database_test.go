@@ -37,7 +37,7 @@ var _ = Describe("Setup database user and groups", func() {
 
 	})
 
-	Context("When I Create the dbview user at the database", func() {
+	Context("When I Create a user at the database", func() {
 
 		It("It check if user exists before try to create a new one", func() {
 			_, err := checkIfUserExists(dbConnectionInfo, testUserName)
@@ -46,6 +46,16 @@ var _ = Describe("Setup database user and groups", func() {
 
 		It("Should create a user in the database", func() {
 			err := CreateUser(dbConnectionInfo, testUserName, []string{"PASSWORD 'super_senha'", "SUPERUSER"})
+			Expect(err).To(BeNil())
+		})
+
+		It("Should grant some roles to a new user", func() {
+			err := GrantRolesToUser(dbConnectionInfo, "sebastian", []string{"dbview"})
+			Expect(err).To(BeNil())
+		})
+
+		It("Should check if user exists before grant a role", func() {
+			err := GrantRolesToUser(dbConnectionInfo, "missing_user_for_this_database", []string{"dbview"})
 			Expect(err).To(BeNil())
 		})
 	})

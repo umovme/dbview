@@ -63,11 +63,8 @@ func CreateUser(connDetail ConnectionDetails, userName string, options []string)
 		return nil
 	}
 
-	if _, err = db.Exec("CREATE USER dbview " + strings.Join(options, " ") + ";"); err != nil {
-		return err
-	}
-
-	return nil
+	_, err = db.Exec("CREATE USER dbview " + strings.Join(options, " ") + ";")
+	return err
 }
 
 func checkIfUserExists(connDetail ConnectionDetails, userName string) (bool, error) {
@@ -89,4 +86,34 @@ func checkIfUserExists(connDetail ConnectionDetails, userName string) (bool, err
 	}
 
 	return found, err
+}
+
+/*
+GrantRolesToUser : Grant some roles privilieges for a user
+*/
+func GrantRolesToUser(connDetail ConnectionDetails, userName string, roles []string) error {
+	var db *sql.DB
+	var err error
+
+	if db, err = connect(connDetail); err != nil {
+		return err
+	}
+
+	var exists bool
+
+	if exists, err = checkIfUserExists(connDetail, userName); err != nil {
+		return err
+	} else if !exists {
+		// returns if the user not exists
+		return nil
+	}
+
+	for _, role := range roles { // GRANT dbview TO ${DBVIEW_USER};
+		_, err = db.Exec(fmt.Sprintf("GRANT %s to %s;", role, userName))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
