@@ -1,8 +1,6 @@
 package setup
 
 import (
-	// . "github.com/sebastianwebber/dbview/setup"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
