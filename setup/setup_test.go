@@ -1,6 +1,10 @@
 package setup
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -75,6 +79,11 @@ var _ = Describe("Setup database user and groups", func() {
 			Expect(err).To(BeNil())
 		})
 
+		It("Should drop a database", func() {
+			err := DropDatabase(dbConnectionInfo, "dbview")
+			Expect(err).To(BeNil())
+		})
+
 		It("Should check if the database exists before create a new one", func() {
 			_, err := checkIfDatabaseExists(dbConnectionInfo, "template1")
 			Expect(err).To(BeNil())
@@ -97,6 +106,31 @@ var _ = Describe("Setup database user and groups", func() {
 
 		It("Should create a new schema", func() {
 			err := CreateSchema(dbConnectionInfo, "public")
+			Expect(err).To(BeNil())
+		})
+	})
+
+	Context("When I restore a database", func() {
+
+		It("Should restore a dump file", func() {
+
+			hasher := md5.New()
+			hasher.Write([]byte(time.Now().Local().Format(time.UnixDate)))
+			tempDBName := "temp_" + hex.EncodeToString(hasher.Sum(nil))
+
+			// dbConnectionInfo.database = "sebastian"
+
+			var err error
+			CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
+
+			dbConnectionInfo.database = tempDBName
+
+			options := RestoreOptions{exePath: "/usr/local/bin/pg_restore", customArgs: []string{"-Fc"}}
+			err = RestoreDumpFile(dbConnectionInfo, "/Users/sebastian/tmp/file.dump", options)
+			Expect(err).To(BeNil())
+
+			dbConnectionInfo.database = "postgres"
+			err = DropDatabase(dbConnectionInfo, tempDBName)
 			Expect(err).To(BeNil())
 		})
 	})

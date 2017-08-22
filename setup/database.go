@@ -30,6 +30,30 @@ func CreateNewDatabase(connDetail ConnectionDetails, dbName string, options []st
 	return err
 }
 
+/*
+DropDatabase : drops a database
+*/
+func DropDatabase(connDetail ConnectionDetails, dbName string) error {
+	var db *sql.DB
+	var err error
+
+	if db, err = connect(connDetail); err != nil {
+		return err
+	}
+
+	var exists bool
+
+	if exists, err = checkIfDatabaseExists(connDetail, dbName); err != nil {
+		return err
+	} else if !exists {
+		// returns if the database already exists
+		return nil
+	}
+
+	_, err = db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s;", dbName))
+	return err
+}
+
 func checkIfDatabaseExists(connDetail ConnectionDetails, dbName string) (bool, error) {
 
 	var db *sql.DB
