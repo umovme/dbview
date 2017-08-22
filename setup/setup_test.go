@@ -145,23 +145,23 @@ var _ = Describe("Setup database user and groups", func() {
 			Expect(err).To(BeNil())
 		})
 
-		// It("Should create the replication functions", func() {
+		It("Should create the replication function", func() {
 
-		// 	tempDBName := createTempDBName()
-		// 	var err error
+			tempDBName := createTempDBName()
+			var err error
 
-		// 	// step 1: create a new database
-		// 	err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
-		// 	Expect(err).To(BeNil())
+			// step 1: create a new database
+			err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
+			Expect(err).To(BeNil())
 
-		// 	// step 2: import the functions
-		// 	err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
-		// 	Expect(err).To(BeNil())
+			// step 2: import the functions
+			err = ExecuteQuery(dbConnectionInfo, ReplicationLogFunction)
+			Expect(err).To(BeNil())
 
-		// 	// step 3: drop the new database
-		// 	dbConnectionInfo.database = "postgres"
-		// 	err = DropDatabase(dbConnectionInfo, tempDBName)
-		// 	Expect(err).To(BeNil())
-		// })
+			// step 3: drop the new database
+			dbConnectionInfo.database = "postgres"
+			err = DropDatabase(dbConnectionInfo, tempDBName)
+			Expect(err).To(BeNil())
+		})
 	})
 })
