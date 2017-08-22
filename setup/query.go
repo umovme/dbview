@@ -119,5 +119,4 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
-
 `

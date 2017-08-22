@@ -124,7 +124,7 @@ var _ = Describe("Setup database user and groups", func() {
 
 			tempDBName := createTempDBName()
 			var err error
-			CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
+			err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
 
 			dbConnectionInfo.database = tempDBName
 
