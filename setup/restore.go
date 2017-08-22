@@ -33,6 +33,7 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 		strings.Join(options.customArgs, " "),
 		dumpFile)
 
+	/// ... at the right means turn the slide in a variadic variable
 	cmd := exec.Command(pgRestoreBin, strings.Split(args, " ")...)
 	var out bytes.Buffer
 	var stderr bytes.Buffer

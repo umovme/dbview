@@ -19,6 +19,12 @@ var _ = Describe("Setup database user and groups", func() {
 
 		testUserName  = "dbview"
 		wrongUserName = "missing_user_for_this_database"
+
+		createTempDBName = func() string {
+			hasher := md5.New()
+			hasher.Write([]byte(time.Now().Local().Format(time.UnixDate)))
+			return "temp_" + hex.EncodeToString(hasher.Sum(nil))
+		}
 	)
 
 	Context("When I connect to the database", func() {
@@ -114,12 +120,9 @@ var _ = Describe("Setup database user and groups", func() {
 
 		It("Should restore a dump file", func() {
 
-			hasher := md5.New()
-			hasher.Write([]byte(time.Now().Local().Format(time.UnixDate)))
-			tempDBName := "temp_" + hex.EncodeToString(hasher.Sum(nil))
-
 			// dbConnectionInfo.database = "sebastian"
 
+			tempDBName := createTempDBName()
 			var err error
 			CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
 
@@ -133,5 +136,32 @@ var _ = Describe("Setup database user and groups", func() {
 			err = DropDatabase(dbConnectionInfo, tempDBName)
 			Expect(err).To(BeNil())
 		})
+	})
+
+	Context("When I connect to the database", func() {
+
+		It("Should run a query", func() {
+			err := ExecuteQuery(dbConnectionInfo, "select 1;")
+			Expect(err).To(BeNil())
+		})
+
+		// It("Should create the replication functions", func() {
+
+		// 	tempDBName := createTempDBName()
+		// 	var err error
+
+		// 	// step 1: create a new database
+		// 	err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
+		// 	Expect(err).To(BeNil())
+
+		// 	// step 2: import the functions
+		// 	err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
+		// 	Expect(err).To(BeNil())
+
+		// 	// step 3: drop the new database
+		// 	dbConnectionInfo.database = "postgres"
+		// 	err = DropDatabase(dbConnectionInfo, tempDBName)
+		// 	Expect(err).To(BeNil())
+		// })
 	})
 })
