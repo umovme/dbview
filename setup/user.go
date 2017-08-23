@@ -25,8 +25,7 @@ func CreateUser(connDetail ConnectionDetails, userName string, options []string)
 		// returns if the user already exists
 		return nil
 	}
-
-	_, err = db.Exec("CREATE USER dbview " + strings.Join(options, " ") + ";")
+	_, err = db.Exec(fmt.Sprintf("CREATE USER %s %s;", userName, strings.Join(options, " ")))
 	return err
 }
 
