@@ -28,8 +28,8 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 
 	args := fmt.Sprintf(
 		"-U %s -d %s %s %s",
-		connDetail.userName,
-		connDetail.database,
+		connDetail.Username,
+		connDetail.Database,
 		strings.Join(options.customArgs, " "),
 		dumpFile)
 

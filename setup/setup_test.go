@@ -13,8 +13,8 @@ var _ = Describe("Setup database user and groups", func() {
 
 	var (
 		dbConnectionInfo = ConnectionDetails{
-			userName: "sebastian",
-			database: "sebastian"}
+			Username: "sebastian",
+			Database: "sebastian"}
 		sampleConnString = "user=sebastian dbname=sebastian"
 
 		testUserName  = "dbview"
@@ -34,11 +34,11 @@ var _ = Describe("Setup database user and groups", func() {
 		})
 
 		It("Should not set a value in the connection string when it is empty", func() {
-			Expect(ConnectionDetails{userName: "sebastian", host: ""}.toString()).To(Equal("user=sebastian"))
+			Expect(ConnectionDetails{Username: "sebastian", Host: ""}.toString()).To(Equal("user=sebastian"))
 		})
 
 		It("Should connect to a database", func() {
-			dbConnectionInfo.sslmode = "disable"
+			dbConnectionInfo.SslMode = "disable"
 			_, err := connect(dbConnectionInfo)
 
 			Expect(err).To(BeNil())
@@ -120,19 +120,19 @@ var _ = Describe("Setup database user and groups", func() {
 
 		It("Should restore a dump file", func() {
 
-			// dbConnectionInfo.database = "sebastian"
+			// dbConnectionInfo.Database = "sebastian"
 
 			tempDBName := createTempDBName()
 			var err error
 			err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
 
-			dbConnectionInfo.database = tempDBName
+			dbConnectionInfo.Database = tempDBName
 
 			options := RestoreOptions{exePath: "/usr/local/bin/pg_restore", customArgs: []string{"-Fc"}}
 			err = RestoreDumpFile(dbConnectionInfo, "/Users/sebastian/tmp/file.dump", options)
 			Expect(err).To(BeNil())
 
-			dbConnectionInfo.database = "postgres"
+			dbConnectionInfo.Database = "postgres"
 			err = DropDatabase(dbConnectionInfo, tempDBName)
 			Expect(err).To(BeNil())
 		})
@@ -159,7 +159,7 @@ var _ = Describe("Setup database user and groups", func() {
 			Expect(err).To(BeNil())
 
 			// step 3: drop the new database
-			dbConnectionInfo.database = "postgres"
+			dbConnectionInfo.Database = "postgres"
 			err = DropDatabase(dbConnectionInfo, tempDBName)
 			Expect(err).To(BeNil())
 		})

@@ -13,7 +13,7 @@ import (
 ConnectionDetails : defines details about a new connection
 */
 type ConnectionDetails struct {
-	userName, host, database, sslmode string
+	Username, Host, Database, SslMode string
 	port                              int
 }
 
@@ -21,20 +21,20 @@ func (c ConnectionDetails) toString() string {
 
 	returnData := ""
 
-	if c.userName != "" {
-		returnData += fmt.Sprintf("user=%s ", c.userName)
+	if c.Username != "" {
+		returnData += fmt.Sprintf("user=%s ", c.Username)
 	}
 
-	if c.database != "" {
-		returnData += fmt.Sprintf("dbname=%s ", c.database)
+	if c.Database != "" {
+		returnData += fmt.Sprintf("dbname=%s ", c.Database)
 	}
 
-	if c.host != "" {
-		returnData += fmt.Sprintf("host=%s ", c.host)
+	if c.Host != "" {
+		returnData += fmt.Sprintf("host=%s ", c.Host)
 	}
 
-	if c.sslmode != "" {
-		returnData += fmt.Sprintf("sslmode=%s", c.sslmode)
+	if c.SslMode != "" {
+		returnData += fmt.Sprintf("sslmode=%s", c.SslMode)
 	}
 
 	return strings.Trim(returnData, " ")
