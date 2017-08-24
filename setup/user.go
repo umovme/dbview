@@ -29,6 +29,30 @@ func CreateUser(connDetail ConnectionDetails, userName string, options []string)
 	return err
 }
 
+/*
+DropUser : Drops a user in the database
+*/
+func DropUser(connDetail ConnectionDetails, userName string) error {
+	var db *sql.DB
+	var err error
+
+	if db, err = connect(connDetail); err != nil {
+		return err
+	}
+
+	var exists bool
+
+	if exists, err = checkIfUserExists(connDetail, userName); err != nil {
+		return err
+	} else if exists {
+		// returns if the user already exists
+		return nil
+	}
+	_, err = db.Exec(
+		fmt.Sprintf("DROP USER IF EXISTS %s;", userName))
+	return err
+}
+
 func checkIfUserExists(connDetail ConnectionDetails, userName string) (bool, error) {
 
 	var db *sql.DB

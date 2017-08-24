@@ -77,6 +77,13 @@ var _ = Describe("Setup database user and groups", func() {
 			err := SetSearchPathForUser(dbConnectionInfo, wrongUserName, []string{"dbview", "public"})
 			Expect(err).To(BeNil())
 		})
+
+		It("Should drop a user if it exists", func() {
+
+			err := DropUser(dbConnectionInfo, wrongUserName)
+			Expect(err).To(BeNil())
+		})
+
 	})
 
 	Context("When I create a database", func() {
