@@ -128,7 +128,7 @@ var _ = Describe("Setup database user and groups", func() {
 
 			dbConnectionInfo.Database = tempDBName
 
-			options := RestoreOptions{exePath: "/usr/local/bin/pg_restore", customArgs: []string{"-Fc"}}
+			options := RestoreOptions{ExePath: "/usr/local/bin/pg_restore", CustomArgs: []string{"-Fc"}}
 			err = RestoreDumpFile(dbConnectionInfo, "/Users/sebastian/tmp/file.dump", options)
 			Expect(err).To(BeNil())
 

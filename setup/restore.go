@@ -11,8 +11,8 @@ import (
 RestoreOptions : Define the options for restore a dump file into a database
 */
 type RestoreOptions struct {
-	exePath    string
-	customArgs []string
+	ExePath    string
+	CustomArgs []string
 }
 
 /*
@@ -22,15 +22,15 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 
 	pgRestoreBin := "pg_restore"
 
-	if options.exePath != "" {
-		pgRestoreBin = options.exePath
+	if options.ExePath != "" {
+		pgRestoreBin = options.ExePath
 	}
 
 	args := fmt.Sprintf(
 		"-U %s -d %s %s %s",
 		connDetail.Username,
 		connDetail.Database,
-		strings.Join(options.customArgs, " "),
+		strings.Join(options.CustomArgs, " "),
 		dumpFile)
 
 	/// ... at the right means turn the slide in a variadic variable
