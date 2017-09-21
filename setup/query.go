@@ -13,6 +13,7 @@ func ExecuteQuery(connDetail ConnectionDetails, query string) error {
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	_, err = db.Exec(query)
 	return err
