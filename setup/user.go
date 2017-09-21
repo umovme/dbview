@@ -16,6 +16,7 @@ func CreateUser(connDetail ConnectionDetails, userName string, options []string)
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	var exists bool
 
@@ -39,6 +40,7 @@ func DropUser(connDetail ConnectionDetails, userName string) error {
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	var exists bool
 
@@ -63,6 +65,7 @@ func checkIfUserExists(connDetail ConnectionDetails, userName string) (bool, err
 	if db, err = connect(connDetail); err != nil {
 		return found, err
 	}
+	defer db.Close()
 
 	totalRows := 0
 	err = db.QueryRow("SELECT count(1) FROM pg_roles WHERE rolname = $1", userName).Scan(&totalRows)
@@ -80,6 +83,7 @@ func GrantRolesToUser(connDetail ConnectionDetails, userName string, roles []str
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	var exists bool
 
@@ -111,6 +115,7 @@ func SetSearchPathForUser(connDetail ConnectionDetails, userName string, schemas
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	var exists bool
 

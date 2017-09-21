@@ -16,6 +16,7 @@ func CreateNewDatabase(connDetail ConnectionDetails, dbName string, options []st
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	var exists bool
 
@@ -30,9 +31,7 @@ func CreateNewDatabase(connDetail ConnectionDetails, dbName string, options []st
 	return err
 }
 
-/*
-DropDatabase : drops a database
-*/
+// DropDatabase : drops a database
 func DropDatabase(connDetail ConnectionDetails, dbName string) error {
 	var db *sql.DB
 	var err error
@@ -40,13 +39,14 @@ func DropDatabase(connDetail ConnectionDetails, dbName string) error {
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	var exists bool
 
 	if exists, err = checkIfDatabaseExists(connDetail, dbName); err != nil {
 		return err
 	} else if !exists {
-		// returns if the database already exists
+		// returns if the database not exists
 		return nil
 	}
 
@@ -64,6 +64,7 @@ func checkIfDatabaseExists(connDetail ConnectionDetails, dbName string) (bool, e
 	if db, err = connect(connDetail); err != nil {
 		return found, err
 	}
+	defer db.Close()
 
 	totalRows := 0
 	err = db.QueryRow("SELECT count(1) FROM pg_database WHERE datname = $1", dbName).Scan(&totalRows)
@@ -71,9 +72,7 @@ func checkIfDatabaseExists(connDetail ConnectionDetails, dbName string) (bool, e
 	return (totalRows > 0), err
 }
 
-/*
-CreateExtensionsInDatabase : Creates extensions in the target database
-*/
+// CreateExtensionsInDatabase : Creates extensions in the target database
 func CreateExtensionsInDatabase(connDetail ConnectionDetails, extensions []string) error {
 
 	var db *sql.DB
@@ -82,6 +81,7 @@ func CreateExtensionsInDatabase(connDetail ConnectionDetails, extensions []strin
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	for _, extension := range extensions {
 		_, err = db.Exec(fmt.Sprintf("CREATE EXTENSION IF NOT EXISTS %s;", extension))
@@ -105,6 +105,7 @@ func CheckIfSchemaExists(connDetail ConnectionDetails, schemaName string) (bool,
 	if db, err = connect(connDetail); err != nil {
 		return found, err
 	}
+	defer db.Close()
 
 	totalRows := 0
 	err = db.QueryRow("SELECT COUNT(1) FROM pg_namespace WHERE nspname = $1", schemaName).Scan(&totalRows)
@@ -123,6 +124,7 @@ func RemoveSchema(connDetail ConnectionDetails, schemaName string) error {
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	_, err = db.Exec(fmt.Sprintf("DROP SCHEMA IF EXISTS %s CASCADE;", schemaName))
 	return err
@@ -139,6 +141,7 @@ func CreateSchema(connDetail ConnectionDetails, schemaName string) error {
 	if db, err = connect(connDetail); err != nil {
 		return err
 	}
+	defer db.Close()
 
 	_, err = db.Exec(fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s;", schemaName))
 	return err
