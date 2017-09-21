@@ -14,6 +14,7 @@ ConnectionDetails : defines details about a new connection
 */
 type ConnectionDetails struct {
 	Username string
+	Password string
 	Host     string
 	Database string
 	SslMode  string
@@ -26,6 +27,10 @@ func (c ConnectionDetails) toString() string {
 
 	if c.Username != "" {
 		returnData += fmt.Sprintf("user=%s ", c.Username)
+	}
+
+	if c.Password != "" {
+		returnData += fmt.Sprintf("password=%s ", c.Password)
 	}
 
 	if c.Database != "" {

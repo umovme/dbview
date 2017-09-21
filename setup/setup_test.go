@@ -13,10 +13,12 @@ var _ = Describe("Setup database user and groups", func() {
 
 	var (
 		dbConnectionInfo = ConnectionDetails{
-			Username: "sebastian",
-			Database: "sebastian",
-			SslMode:  "disable"}
-		sampleConnString = "user=sebastian dbname=sebastian sslmode=disable"
+			Username: "dbview_tests",
+			Database: "dbview_tests",
+			SslMode:  "disable",
+			Password: "superTest!"}
+
+		sampleConnString = "user=dbview_tests password=superTest! dbname=dbview_tests sslmode=disable"
 
 		testUserName  = "dbview"
 		wrongUserName = "missing_user_for_this_database"

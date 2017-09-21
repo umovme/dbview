@@ -3,6 +3,7 @@ package setup
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -33,6 +34,13 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 		strings.Join(options.CustomArgs, " "),
 		dumpFile)
 
+	if connDetail.Password != "" {
+		err := os.Setenv("PGPASSWORD", connDetail.Password)
+
+		if err != nil {
+			return err
+		}
+	}
 	/// ... at the right means turn the slide in a variadic variable
 	cmd := exec.Command(pgRestoreBin, strings.Split(args, " ")...)
 	var out bytes.Buffer
@@ -40,7 +48,7 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf(fmt.Sprint(err) + ": " + stderr.String())
+		return fmt.Errorf(fmt.Sprint(err) + ". " + stderr.String() + "(" + args + ")")
 	}
 
 	return nil
