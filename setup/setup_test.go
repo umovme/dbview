@@ -14,8 +14,9 @@ var _ = Describe("Setup database user and groups", func() {
 	var (
 		dbConnectionInfo = ConnectionDetails{
 			Username: "sebastian",
-			Database: "sebastian"}
-		sampleConnString = "user=sebastian dbname=sebastian"
+			Database: "sebastian",
+			SslMode:  "disable"}
+		sampleConnString = "user=sebastian dbname=sebastian sslmode=disable"
 
 		testUserName  = "dbview"
 		wrongUserName = "missing_user_for_this_database"
@@ -38,7 +39,6 @@ var _ = Describe("Setup database user and groups", func() {
 		})
 
 		It("Should connect to a database", func() {
-			dbConnectionInfo.SslMode = "disable"
 			_, err := connect(dbConnectionInfo)
 
 			Expect(err).To(BeNil())
@@ -129,17 +129,23 @@ var _ = Describe("Setup database user and groups", func() {
 
 			// dbConnectionInfo.Database = "sebastian"
 
+			//tempDBName := "teste_capiroto"
 			tempDBName := createTempDBName()
 			var err error
 			err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
 
-			dbConnectionInfo.Database = tempDBName
+			newConn := dbConnectionInfo
+			newConn.Database = tempDBName
 
-			options := RestoreOptions{ExePath: "/usr/local/bin/pg_restore", CustomArgs: []string{"-Fc"}}
-			err = RestoreDumpFile(dbConnectionInfo, "/Users/sebastian/tmp/file.dump", options)
+			err = CreateExtensionsInDatabase(newConn, []string{"hstore", "dblink", "pg_freespacemap", "postgis", "tablefunc", "unaccent"})
 			Expect(err).To(BeNil())
 
-			dbConnectionInfo.Database = "postgres"
+			options := RestoreOptions{
+				ExePath:    "/usr/local/bin/pg_restore",
+				CustomArgs: []string{"-Fc"}}
+			err = RestoreDumpFile(newConn, "/Users/sebastian/tmp/file.dump", options)
+			Expect(err).To(BeNil())
+
 			err = DropDatabase(dbConnectionInfo, tempDBName)
 			Expect(err).To(BeNil())
 		})
