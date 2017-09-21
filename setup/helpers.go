@@ -13,8 +13,11 @@ import (
 ConnectionDetails : defines details about a new connection
 */
 type ConnectionDetails struct {
-	Username, Host, Database, SslMode string
-	port                              int
+	Username string
+	Host     string
+	Database string
+	SslMode  string
+	port     int
 }
 
 func (c ConnectionDetails) toString() string {
