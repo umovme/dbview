@@ -106,21 +106,6 @@ Please contact us with you have any trouble.`,
 	},
 }
 
-func log(message ...string) {
-	s := make([]interface{}, len(message)-1)
-	for i := 1; i < len(message); i++ {
-		s[i-1] = message[i]
-	}
-	fmt.Println(fmt.Sprintf(message[0], s...))
-}
-
-// abort: aborts this program on any error
-func abort(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 func checkInputParameters() bool {
 
 	if pCustomerID == 0 {
@@ -174,15 +159,5 @@ func init() {
 	installCmd.Flags().StringVarP(&pDumpFile, "dump-file", "D", "", "Database dump file")
 	installCmd.Flags().StringVarP(&pTargetDatabase, "target-database", "", "umovme_dbview_db", "The target database")
 	installCmd.Flags().StringVarP(&pTargetUserName, "target-username", "", "dbview", "The target username")
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// installCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// installCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
