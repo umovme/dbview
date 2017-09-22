@@ -1,0 +1,32 @@
+# .goreleaser.yml
+# Build customization
+builds:
+  - binary: dbview 
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - 386
+      - amd64
+
+# Archive customization
+archive:
+  format: tgz
+  replacements:
+    386: 32-bit
+    amd64: 64-bit
+    darwin: macOS
+
+fpm:
+  vendor: uMov.me Team
+  homepage: https://umov.me
+
+  maintainer: uMov.me Team <devteam-umovme@googlegroups.com>
+
+  description: Manages the local dbview database providing tools to install, configure and update the replication system.
+  
+  # Formats to generate as output
+  formats:
+    - rpm
+    - deb
