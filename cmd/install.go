@@ -58,7 +58,7 @@ Please contact us with you have any trouble.`,
 		if !checkInputParameters() {
 			return
 		}
-		conn := setup.ConnectionDetails{Username: pDBUserName, Host: pDBHost, Database: pDBName, SslMode: pDBSslMode}
+		conn := setup.ConnectionDetails{Username: pDBUserName, Host: pDBHost, Database: pDBName, SslMode: pDBSslMode, Password: pDBPassword}
 
 		customerUser := fmt.Sprintf("u%d", pCustomerID)
 		cleanup(conn, customerUser)
