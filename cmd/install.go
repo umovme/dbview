@@ -54,7 +54,7 @@ Please contact us with you have any trouble.`,
 
 		logInfoBold("Installing dbview and dependencies")
 
-		logInfoBold("Validating parameters...")
+		log.Info("Validating parameters...")
 		if !checkInputParameters() {
 			return
 		}
@@ -63,6 +63,7 @@ Please contact us with you have any trouble.`,
 		customerUser := fmt.Sprintf("u%d", pCustomerID)
 		cleanup(conn, customerUser)
 
+		logInfoBold("Starting up")
 		for _, user := range []string{pTargetUserName, customerUser} {
 			log.Infof("Creating the '%s' user", user)
 			abort(
@@ -127,7 +128,7 @@ func checkInputParameters() bool {
 func cleanup(conn setup.ConnectionDetails, customerUser string) {
 	if pCleanInstall {
 
-		logInfoBold("Cleanup old stuff")
+		logWarnBold("Cleanup old stuff")
 
 		log.Warnf("Dropping the '%s' database", pTargetDatabase)
 		abort(

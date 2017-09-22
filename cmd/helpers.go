@@ -16,3 +16,7 @@ func abort(err error) {
 func logInfoBold(message string) {
 	log.Infof("\033[1m%s\033[0m", strings.ToUpper(message))
 }
+
+func logWarnBold(message string) {
+	log.Warnf("\033[1m%s\033[0m", strings.ToUpper(message))
+}
