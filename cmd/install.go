@@ -33,6 +33,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/apex/log"
 	"github.com/spf13/cobra"
 	"github.com/umovme/dbview/setup"
 )
@@ -51,7 +52,9 @@ The database dump are provided by the uMov.me support team.
 Please contact us with you have any trouble.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		log("Validating parameters...")
+		logInfoBold("Installing dbview and dependencies")
+
+		logInfoBold("Validating parameters...")
 		if !checkInputParameters() {
 			return
 		}
@@ -61,24 +64,24 @@ Please contact us with you have any trouble.`,
 		cleanup(conn, customerUser)
 
 		for _, user := range []string{pTargetUserName, customerUser} {
-			log("Creating the '%s' user", user)
+			log.Infof("Creating the '%s' user", user)
 			abort(
 				setup.CreateUser(conn, user, nil))
 		}
 
-		log("Fixing permissions")
+		log.Info("Fixing permissions")
 		abort(
 			setup.GrantRolesToUser(conn, customerUser, []string{pTargetUserName}))
 
-		log("Updating the 'search_path'")
+		log.Info("Updating the 'search_path'")
 		abort(
 			setup.SetSearchPathForUser(conn, customerUser, []string{customerUser, "public"}))
 
-		log("Creating the '%s' database", pTargetDatabase)
+		log.Infof("Creating the '%s' database", pTargetDatabase)
 		abort(
 			setup.CreateNewDatabase(conn, pTargetDatabase, []string{"OWNER " + pTargetUserName, "TEMPLATE template0"}))
 
-		log("Creating the necessary extensions")
+		log.Info("Creating the necessary extensions")
 		conn.Database = pTargetDatabase
 		abort(
 			setup.CreateExtensionsInDatabase(conn, []string{"hstore", "dblink", "pg_freespacemap", "postgis", "tablefunc", "unaccent"}))
@@ -97,11 +100,11 @@ Please contact us with you have any trouble.`,
 			restoreArgs = append(restoreArgs, fmt.Sprintf("--schema=%s", customerUser))
 		}
 
-		log("Restoring the dump file")
+		log.Info("Restoring the dump file")
 		abort(
 			setup.RestoreDumpFile(conn, pDumpFile, setup.RestoreOptions{CustomArgs: restoreArgs}))
 
-		log("Done.")
+		log.Info("Done.")
 	},
 }
 
@@ -124,11 +127,13 @@ func checkInputParameters() bool {
 func cleanup(conn setup.ConnectionDetails, customerUser string) {
 	if pCleanInstall {
 
-		log("Cleaning up the '%s' database", pTargetDatabase)
+		logInfoBold("Cleanup old stuff")
+
+		log.Warnf("Dropping the '%s' database", pTargetDatabase)
 		abort(
 			setup.DropDatabase(conn, pTargetDatabase))
 		for _, user := range []string{pTargetUserName, customerUser} {
-			log("Dropping the '%s' user", user)
+			log.Warnf("Dropping the '%s' user", user)
 			abort(
 				setup.DropUser(conn, user))
 		}

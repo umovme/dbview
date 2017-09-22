@@ -34,6 +34,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/apex/log"
+	"github.com/apex/log/handlers/cli"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -56,6 +58,7 @@ Please contact us with you have any trouble.`,
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -64,6 +67,9 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.InfoLevel)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
