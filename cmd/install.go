@@ -98,7 +98,6 @@ Please contact us with you have any trouble.`,
 		}
 
 		log("Restoring the dump file")
-		conn.Username = customerUser
 		abort(
 			setup.RestoreDumpFile(conn, pDumpFile, setup.RestoreOptions{CustomArgs: restoreArgs}))
 
