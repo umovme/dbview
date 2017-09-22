@@ -129,12 +129,10 @@ var _ = Describe("Setup database user and groups", func() {
 
 		It("Should restore a dump file", func() {
 
-			// dbConnectionInfo.Database = "sebastian"
-
-			//tempDBName := "teste_capiroto"
 			tempDBName := createTempDBName()
 			var err error
 			err = CreateNewDatabase(dbConnectionInfo, tempDBName, nil)
+			Expect(err).To(BeNil())
 
 			newConn := dbConnectionInfo
 			newConn.Database = tempDBName
