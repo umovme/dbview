@@ -143,11 +143,17 @@ func cleanup(conn setup.ConnectionDetails, customerUser string) {
 }
 
 var (
-	pCustomerID, pDBPort                                 int
-	pDBUserName, pDBHost, pDBName, pDBSslMode, pDumpFile string
-	pDBPassword                                          string
-	pTargetDatabase, pTargetUserName                     string
-	pCleanInstall                                        bool
+	pCustomerID     int
+	pDBPort         int
+	pDBUserName     string
+	pDBHost         string
+	pDBName         string
+	pDBSslMode      string
+	pDBPassword     string
+	pDumpFile       string
+	pTargetDatabase string
+	pTargetUserName string
+	pCleanInstall   bool
 )
 
 func init() {
