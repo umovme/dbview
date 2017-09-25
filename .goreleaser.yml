@@ -34,3 +34,5 @@ fpm:
   formats:
     - rpm
     - deb
+  files:
+    "config.toml": "/etc/dbview.toml"
