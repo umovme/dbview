@@ -16,7 +16,11 @@ archive:
   replacements:
     386: 32-bit
     amd64: 64-bit
+
     darwin: macOS
+  files:
+    - config.toml
+
 
 fpm:
   vendor: uMov.me Team
