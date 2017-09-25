@@ -84,6 +84,7 @@ Please contact us with you have any trouble.`,
 
 		log.Info("Creating the necessary extensions")
 		conn.Database = pTargetDatabase
+
 		abort(
 			setup.CreateExtensionsInDatabase(conn, []string{"hstore", "dblink", "pg_freespacemap", "postgis", "tablefunc", "unaccent"}))
 
