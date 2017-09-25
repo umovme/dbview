@@ -18,7 +18,7 @@ type ConnectionDetails struct {
 	Host     string
 	Database string
 	SslMode  string
-	port     int
+	Port     int
 }
 
 func (c ConnectionDetails) toString() string {
@@ -42,7 +42,11 @@ func (c ConnectionDetails) toString() string {
 	}
 
 	if c.SslMode != "" {
-		returnData += fmt.Sprintf("sslmode=%s", c.SslMode)
+		returnData += fmt.Sprintf("sslmode=%s ", c.SslMode)
+	}
+
+	if c.Port > 0 {
+		returnData += fmt.Sprintf("port=%d ", c.Port)
 	}
 
 	return strings.Trim(returnData, " ")
