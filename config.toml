@@ -1,0 +1,14 @@
+# DBView configuration file
+
+# customer = 0
+
+
+[local-database]
+ssl = "disable"
+username = "postgres"
+password = "postgres"
+host = "127.0.0.1"
+database = "postgres"
+port = 5432
+target_username = "dbview"
+target_database = "umovme_dbview_db"
