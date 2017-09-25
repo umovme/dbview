@@ -33,6 +33,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/spf13/viper"
+
 	"github.com/apex/log"
 	"github.com/spf13/cobra"
 	"github.com/umovme/dbview/setup"
@@ -58,13 +60,23 @@ Please contact us with you have any trouble.`,
 		if !checkInputParameters() {
 			return
 		}
-		conn := setup.ConnectionDetails{Username: pDBUserName, Host: pDBHost, Database: pDBName, SslMode: pDBSslMode, Password: pDBPassword}
 
-		customerUser := fmt.Sprintf("u%d", pCustomerID)
+		// fmt.Println(viper.GetString("local-database.ssl"), viper.GetString("author"), viper.GetString("local-database.ssl"))
+		// return
+
+		conn := setup.ConnectionDetails{
+			Username: viper.GetString("local-database.username"),
+			Host:     viper.GetString("local-database.host"),
+			Port:     viper.GetInt("local-database.port"),
+			Database: viper.GetString("local-database.database"),
+			SslMode:  viper.GetString("local-database.ssl"),
+			Password: viper.GetString("local-database.password")}
+
+		customerUser := fmt.Sprintf("u%d", viper.GetInt("customer"))
 		cleanup(conn, customerUser)
 
 		logInfoBold("Starting up")
-		for _, user := range []string{pTargetUserName, customerUser} {
+		for _, user := range []string{viper.GetString("local-database.target_username"), customerUser} {
 			log.Infof("Creating the '%s' user", user)
 			abort(
 				setup.CreateUser(conn, user, nil))
@@ -72,18 +84,18 @@ Please contact us with you have any trouble.`,
 
 		log.Info("Fixing permissions")
 		abort(
-			setup.GrantRolesToUser(conn, customerUser, []string{pTargetUserName}))
+			setup.GrantRolesToUser(conn, customerUser, []string{viper.GetString("local-database.target_username")}))
 
 		log.Info("Updating the 'search_path'")
 		abort(
 			setup.SetSearchPathForUser(conn, customerUser, []string{customerUser, "public"}))
 
-		log.Infof("Creating the '%s' database", pTargetDatabase)
+		log.Infof("Creating the '%s' database", viper.GetString("local-database.target_database"))
 		abort(
-			setup.CreateNewDatabase(conn, pTargetDatabase, []string{"OWNER " + pTargetUserName, "TEMPLATE template0"}))
+			setup.CreateNewDatabase(conn, viper.GetString("local-database.target_database"), []string{"OWNER " + viper.GetString("local-database.target_username"), "TEMPLATE template0"}))
 
 		log.Info("Creating the necessary extensions")
-		conn.Database = pTargetDatabase
+		conn.Database = viper.GetString("local-database.target_database")
 
 		abort(
 			setup.CreateExtensionsInDatabase(conn, []string{"hstore", "dblink", "pg_freespacemap", "postgis", "tablefunc", "unaccent"}))
@@ -112,7 +124,7 @@ Please contact us with you have any trouble.`,
 
 func checkInputParameters() bool {
 
-	if pCustomerID == 0 {
+	if viper.GetInt("customer") == 0 {
 		fmt.Println("Missing the customer id!")
 		return false
 	}
@@ -131,10 +143,10 @@ func cleanup(conn setup.ConnectionDetails, customerUser string) {
 
 		logWarnBold("Cleanup old stuff")
 
-		log.Warnf("Dropping the '%s' database", pTargetDatabase)
+		log.Warnf("Dropping the '%s' database", viper.GetString("local-database.target_database"))
 		abort(
-			setup.DropDatabase(conn, pTargetDatabase))
-		for _, user := range []string{pTargetUserName, customerUser} {
+			setup.DropDatabase(conn, viper.GetString("local-database.target_database")))
+		for _, user := range []string{viper.GetString("local-database.target_username"), customerUser} {
 			log.Warnf("Dropping the '%s' user", user)
 			abort(
 				setup.DropUser(conn, user))
@@ -143,33 +155,14 @@ func cleanup(conn setup.ConnectionDetails, customerUser string) {
 }
 
 var (
-	pCustomerID     int
-	pDBPort         int
-	pDBUserName     string
-	pDBHost         string
-	pDBName         string
-	pDBSslMode      string
-	pDBPassword     string
-	pDumpFile       string
-	pTargetDatabase string
-	pTargetUserName string
-	pCleanInstall   bool
+	pCleanInstall bool
+	pDumpFile     string
 )
 
 func init() {
 	RootCmd.AddCommand(installCmd)
 
 	installCmd.Flags().BoolVarP(&pCleanInstall, "force-cleanup", "", false, "Remove the database and user before starts (DANGER)")
-
-	installCmd.Flags().StringVarP(&pDBSslMode, "ssl-mode", "S", "disable", "SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported")
-	installCmd.Flags().IntVarP(&pCustomerID, "customer", "c", 0, "Your customer ID")
-	installCmd.Flags().IntVarP(&pDBPort, "port", "p", 5432, "Database port")
-	installCmd.Flags().StringVarP(&pDBUserName, "username", "U", "postgres", "Database user")
-	installCmd.Flags().StringVarP(&pDBPassword, "password", "P", "", "Username password")
-	installCmd.Flags().StringVarP(&pDBHost, "host", "", "127.0.0.1", "Database host")
-	installCmd.Flags().StringVarP(&pDBName, "database", "d", "postgres", "Database name")
-	installCmd.Flags().StringVarP(&pDumpFile, "dump-file", "D", "", "Database dump file")
-	installCmd.Flags().StringVarP(&pTargetDatabase, "target-database", "", "umovme_dbview_db", "The target database")
-	installCmd.Flags().StringVarP(&pTargetUserName, "target-username", "", "dbview", "The target username")
+	installCmd.Flags().StringVar(&pDumpFile, "dump-file", "", "Database dump file")
 
 }

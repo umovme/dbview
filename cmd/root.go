@@ -80,9 +80,36 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dbview.yaml)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("help", "a", false, "Help message for dbview app")
+
+	RootCmd.PersistentFlags().String("local-database.ssl", "disable", "Local SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported")
+	viper.BindPFlag("local-database.ssl", RootCmd.PersistentFlags().Lookup("local-database.ssl"))
+
+	RootCmd.PersistentFlags().StringP("local-database.username", "U", "postgres", "Local Database user")
+	viper.BindPFlag("local-database.username", RootCmd.PersistentFlags().Lookup("local-database.username"))
+
+	RootCmd.PersistentFlags().StringP("local-database.port", "p", "", "Local Database password")
+	viper.BindPFlag("local-database.port", RootCmd.PersistentFlags().Lookup("local-database.port"))
+
+	RootCmd.PersistentFlags().StringP("local-database.password", "P", "", "Local Database password")
+	viper.BindPFlag("local-database.password", RootCmd.PersistentFlags().Lookup("local-database.password"))
+
+	RootCmd.PersistentFlags().StringP("local-database.host", "h", "127.0.0.1", "Local Database host")
+	viper.BindPFlag("local-database.host", RootCmd.PersistentFlags().Lookup("local-database.host"))
+
+	RootCmd.PersistentFlags().StringP("local-database.database", "d", "postgres", "Local maintenance database. Used for administrative tasks.")
+	viper.BindPFlag("local-database.database", RootCmd.PersistentFlags().Lookup("local-database.database"))
+
+	RootCmd.PersistentFlags().String("local-database.target_database", "umovme_dbview_db", "Local target database.")
+	viper.BindPFlag("local-database.target_database", RootCmd.PersistentFlags().Lookup("local-database.target_database"))
+
+	RootCmd.PersistentFlags().String("local-database.target_username", "dbview", "Local target username.")
+	viper.BindPFlag("local-database.target_username", RootCmd.PersistentFlags().Lookup("local-database.target_username"))
+
+	RootCmd.PersistentFlags().Int("customer", 0, "Your customer ID")
+	viper.BindPFlag("customer", RootCmd.PersistentFlags().Lookup("customer"))
+
+	RootCmd.PersistentFlags().Bool("help", false, "Show this help message")
+
 }
 
 // initConfig reads in config file and ENV variables if set.
