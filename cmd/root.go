@@ -33,6 +33,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/text"
@@ -68,7 +69,10 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	log.SetHandler(text.Default)
+	// ugly messages on windows forces me to disable this pretty messages
+	if runtime.GOOS != "windows" {
+		log.SetHandler(text.Default)
+	}
 	log.SetLevel(log.InfoLevel)
 
 	// Here you will define your flags and configuration settings.

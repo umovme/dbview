@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"runtime"
 	"strings"
 
 	"github.com/apex/log"
@@ -14,9 +15,17 @@ func abort(err error) {
 }
 
 func logInfoBold(message string) {
-	log.Infof("\033[1m%s\033[0m", strings.ToUpper(message))
+	if runtime.GOOS != "windows" {
+		log.Infof("\033[1m%s\033[0m", strings.ToUpper(message))
+	} else {
+		log.Infof("%s", strings.ToUpper(message))
+	}
 }
 
 func logWarnBold(message string) {
-	log.Warnf("\033[1m%s\033[0m", strings.ToUpper(message))
+	if runtime.GOOS != "windows" {
+		log.Warnf("\033[1m%s\033[0m", strings.ToUpper(message))
+	} else {
+		log.Warnf("%s", strings.ToUpper(message))
+	}
 }
