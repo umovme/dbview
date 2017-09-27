@@ -114,6 +114,12 @@ Please contact us with you have any trouble.`,
 			restoreArgs = append(restoreArgs, fmt.Sprintf("--schema=%s", customerUser))
 		}
 
+		pgPath := viper.GetString("pgsql-bin")
+
+		if pgPath != "" {
+			setup.SetPgsqlBinPath(pgPath)
+		}
+
 		log.Info("Restoring the dump file")
 		abort(
 			setup.RestoreDumpFile(conn, pDumpFile, setup.RestoreOptions{CustomArgs: restoreArgs}))

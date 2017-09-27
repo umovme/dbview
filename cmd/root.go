@@ -108,6 +108,9 @@ func init() {
 	RootCmd.PersistentFlags().Int("customer", 0, "Your customer ID")
 	viper.BindPFlag("customer", RootCmd.PersistentFlags().Lookup("customer"))
 
+	RootCmd.PersistentFlags().String("pgsql-bin", "", "PostgreSQL binaries PATH")
+	viper.BindPFlag("pgsql-bin", RootCmd.PersistentFlags().Lookup("pgsql-bin"))
+
 	RootCmd.PersistentFlags().Bool("help", false, "Show this help message")
 
 }

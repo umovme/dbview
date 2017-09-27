@@ -137,6 +137,11 @@ var _ = Describe("Setup database user and groups", func() {
 
 	Context("When I restore a database", func() {
 
+		It("Should support a custom PATH for PostgreSQL binaries", func() {
+			SetPgsqlBinPath("/usr/local/bin")
+			Expect(pgsqlBinPATH).To(BeEquivalentTo("/usr/local/bin"))
+		})
+
 		It("Should restore a dump file", func() {
 
 			tempDBName := createTempDBName()
@@ -151,7 +156,6 @@ var _ = Describe("Setup database user and groups", func() {
 			Expect(err).To(BeNil())
 
 			options := RestoreOptions{
-				ExePath:    "/usr/local/bin/pg_restore",
 				CustomArgs: []string{"-Fc"}}
 			err = RestoreDumpFile(newConn, "/Users/sebastian/tmp/file.dump", options)
 			Expect(err).To(BeNil())

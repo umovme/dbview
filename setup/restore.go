@@ -8,11 +8,8 @@ import (
 	"strings"
 )
 
-/*
-RestoreOptions : Define the options for restore a dump file into a database
-*/
+// RestoreOptions : Define the options for restore a dump file into a database
 type RestoreOptions struct {
-	ExePath    string
 	CustomArgs []string
 }
 
@@ -23,8 +20,8 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 
 	pgRestoreBin := "pg_restore"
 
-	if options.ExePath != "" {
-		pgRestoreBin = options.ExePath
+	if pgsqlBinPATH != "" {
+		pgRestoreBin = fmt.Sprintf("%s/pg_restore", pgsqlBinPATH)
 	}
 
 	args := fmt.Sprintf(

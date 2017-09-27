@@ -9,6 +9,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var (
+	pgsqlBinPATH string
+)
+
 /*
 ConnectionDetails : defines details about a new connection
 */
@@ -54,4 +58,11 @@ func (c ConnectionDetails) toString() string {
 
 func connect(connDetail ConnectionDetails) (*sql.DB, error) {
 	return sql.Open("postgres", connDetail.toString())
+}
+
+// SetPgsqlBinPath : Sets the PostgreSQL binary path
+// This option exists to force the full binaries path when the
+// binaries are not present in the OS PATH environment variable.
+func SetPgsqlBinPath(path string) {
+	pgsqlBinPATH = path
 }
