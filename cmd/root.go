@@ -114,16 +114,18 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" { // enable ability to specify config file via flag
-		viper.SetConfigFile(cfgFile)
-	}
-
 	viper.SetConfigName(".dbview") // name of config file (without extension)
 	viper.AddConfigPath("$HOME")   // adding home directory as first search path
 	viper.AutomaticEnv()           // read in environment variables that match
 
+	if cfgFile != "" { // enable ability to specify config file via flag
+		viper.SetConfigFile(cfgFile)
+	}
+
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		log.Info("Using config file: " + viper.ConfigFileUsed())
+	} else {
+		log.WithError(err).Fatal("fail to load the config file")
 	}
 }
