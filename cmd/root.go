@@ -99,12 +99,6 @@ func init() {
 	RootCmd.PersistentFlags().StringP("local-database.database", "d", "postgres", "Local maintenance database. Used for administrative tasks.")
 	viper.BindPFlag("local-database.database", RootCmd.PersistentFlags().Lookup("local-database.database"))
 
-	RootCmd.PersistentFlags().String("local-database.target_database", "umovme_dbview_db", "Local target database.")
-	viper.BindPFlag("local-database.target_database", RootCmd.PersistentFlags().Lookup("local-database.target_database"))
-
-	RootCmd.PersistentFlags().String("local-database.target_username", "dbview", "Local target username.")
-	viper.BindPFlag("local-database.target_username", RootCmd.PersistentFlags().Lookup("local-database.target_username"))
-
 	RootCmd.PersistentFlags().Int("customer", 0, "Your customer ID")
 	viper.BindPFlag("customer", RootCmd.PersistentFlags().Lookup("customer"))
 

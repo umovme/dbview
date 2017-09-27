@@ -171,4 +171,10 @@ func init() {
 	installCmd.Flags().BoolVarP(&pCleanInstall, "force-cleanup", "", false, "Remove the database and user before starts (DANGER)")
 	installCmd.Flags().StringVar(&pDumpFile, "dump-file", "", "Database dump file")
 
+	installCmd.PersistentFlags().String("local-database.target_database", "umovme_dbview_db", "Local target database.")
+	viper.BindPFlag("local-database.target_database", installCmd.PersistentFlags().Lookup("local-database.target_database"))
+
+	installCmd.PersistentFlags().String("local-database.target_username", "dbview", "Local target username.")
+	viper.BindPFlag("local-database.target_username", installCmd.PersistentFlags().Lookup("local-database.target_username"))
+
 }
