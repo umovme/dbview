@@ -2,12 +2,12 @@
 
 TAG="v${1}"
 
-if [ "${TAG}X" = "X" ]; then
+if [ "${1}X" = "X" ]; then
   echo "missing tag name"
   exit 2
 fi
 
-if [ ${2} = "--clean" ]; then
+if [ "${2}" = "--clean" ]; then
     git push --delete origin "${TAG}" 
     git tag --delete "${TAG}"
 fi
