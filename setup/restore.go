@@ -45,7 +45,13 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf(fmt.Sprint(err) + ". " + stderr.String() + "(" + args + ")")
+		return fmt.Errorf(
+			fmt.Sprintf(
+				"%s. %s\nCMD: %s %s",
+				fmt.Sprint(err),
+				stderr.String(),
+				pgRestoreBin,
+				args))
 	}
 
 	return nil
