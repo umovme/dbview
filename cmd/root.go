@@ -81,19 +81,19 @@ func init() {
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dbview.yaml)")
 
-	RootCmd.PersistentFlags().String("local-database.ssl", "disable", "Local SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported")
+	RootCmd.PersistentFlags().String("local-database.ssl", "disable", sslConnectionLabel)
 	viper.BindPFlag("local-database.ssl", RootCmd.PersistentFlags().Lookup("local-database.ssl"))
 
-	RootCmd.PersistentFlags().StringP("local-database.username", "U", "postgres", "Local Database user")
+	RootCmd.PersistentFlags().StringP("local-database.username", "U", "postgres", f("Local %s", dbUserLabel))
 	viper.BindPFlag("local-database.username", RootCmd.PersistentFlags().Lookup("local-database.username"))
 
-	RootCmd.PersistentFlags().StringP("local-database.port", "p", "", "Local Database password")
+	RootCmd.PersistentFlags().StringP("local-database.port", "p", "", f("Local %s", dbPortLabel))
 	viper.BindPFlag("local-database.port", RootCmd.PersistentFlags().Lookup("local-database.port"))
 
-	RootCmd.PersistentFlags().StringP("local-database.password", "P", "", "Local Database password")
+	RootCmd.PersistentFlags().StringP("local-database.password", "P", "", f("Local %s", dbUserPasswordLabel))
 	viper.BindPFlag("local-database.password", RootCmd.PersistentFlags().Lookup("local-database.password"))
 
-	RootCmd.PersistentFlags().StringP("local-database.host", "h", "127.0.0.1", "Local Database host")
+	RootCmd.PersistentFlags().StringP("local-database.host", "h", "127.0.0.1", f("Local %s", dbHostLabel))
 	viper.BindPFlag("local-database.host", RootCmd.PersistentFlags().Lookup("local-database.host"))
 
 	RootCmd.PersistentFlags().StringP("local-database.database", "d", "postgres", "Local maintenance database. Used for administrative tasks.")
