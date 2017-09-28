@@ -16,6 +16,9 @@ port = 5432
 target_username = "dbview"
 target_database = "umovme_dbview_db"
 
+
+
+## You can get the user and password with our support team.
 [remote-database]
 ssl = "disable"
 # username = ""
