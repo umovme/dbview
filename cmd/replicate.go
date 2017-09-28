@@ -1,4 +1,4 @@
-// Copyright © 2017 Sebastian Webber <sebastian@swebber.me>
+// Copyright © 2017 uMov.me Team <devteam-umovme@googlegroups.com>
 //
 // All rights reserved.
 //
