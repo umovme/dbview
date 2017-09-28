@@ -1,6 +1,9 @@
 # DBView configuration file
 
-# customer = 0
+customer = 15993
+
+## on windows path, use the '/', eg:
+# pgsql-bin = "C:/Program Files/PostgreSQL/9.3/bin"
 
 
 [local-database]
@@ -12,3 +15,11 @@ database = "postgres"
 port = 5432
 target_username = "dbview"
 target_database = "umovme_dbview_db"
+
+[remote-database]
+ssl = "disable"
+# username = ""
+# password = ""
+host = "dbview.umov.me"
+database = "prod_umov_dbview"
+port = 9999
