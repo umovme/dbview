@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	sslConnectionLabel  string = "Local SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported"
+	sslConnectionLabel  string = "SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported"
 	dbUserLabel         string = "Database User"
 	dbUserPasswordLabel string = "Database password"
 	dbPortLabel         string = "Database Port"

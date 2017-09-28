@@ -81,7 +81,7 @@ func init() {
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dbview.yaml)")
 
-	RootCmd.PersistentFlags().String("local-database.ssl", "disable", sslConnectionLabel)
+	RootCmd.PersistentFlags().String("local-database.ssl", "disable", f("Local %s", sslConnectionLabel))
 	viper.BindPFlag("local-database.ssl", RootCmd.PersistentFlags().Lookup("local-database.ssl"))
 
 	RootCmd.PersistentFlags().StringP("local-database.username", "U", "postgres", f("Local %s", dbUserLabel))
