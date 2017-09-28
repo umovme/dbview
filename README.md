@@ -31,8 +31,9 @@ brew install dpkg
 ### Deploying new versions
 
 ```bash
-goreleaser --rm-dist
+./publish TAG
 ```
+> Remember to use a tag in the [semantic versioning](http://semver.org/) pattern.
 
 ## How to use it
 
