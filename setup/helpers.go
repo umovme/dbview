@@ -25,7 +25,11 @@ type ConnectionDetails struct {
 	Port     int
 }
 
-func (c ConnectionDetails) toString() string {
+var c *ConnectionDetails
+
+// ToString : Creates a connection string in the lib/pq format
+func ToString() string { return c.ToString() }
+func (c ConnectionDetails) ToString() string {
 
 	returnData := ""
 
@@ -57,7 +61,7 @@ func (c ConnectionDetails) toString() string {
 }
 
 func connect(connDetail ConnectionDetails) (*sql.DB, error) {
-	return sql.Open("postgres", connDetail.toString())
+	return sql.Open("postgres", connDetail.ToString())
 }
 
 // SetPgsqlBinPath : Sets the PostgreSQL binary path

@@ -34,11 +34,11 @@ var _ = Describe("Setup database user and groups", func() {
 	Context("When I connect to the database", func() {
 
 		It("Should convert a the connection info to the lib/pq connection", func() {
-			Expect(dbConnectionInfo.toString()).To(Equal(sampleConnString))
+			Expect(dbConnectionInfo.ToString()).To(Equal(sampleConnString))
 		})
 
 		It("Should not set a value in the connection string when it is empty", func() {
-			Expect(ConnectionDetails{Username: "sebastian", Host: ""}.toString()).To(Equal("user=sebastian"))
+			Expect(ConnectionDetails{Username: "sebastian", Host: ""}.ToString()).To(Equal("user=sebastian"))
 		})
 
 		It("Should connect to a database", func() {
