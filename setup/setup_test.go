@@ -91,7 +91,7 @@ var _ = Describe("Setup database user and groups", func() {
 
 	Context("When I create a extension", func() {
 
-		It("Should check if extension are avaliable", func() {
+		It("Should check if extension are available", func() {
 			_, err := checkExtensionInDatabase(dbConnectionInfo, "plpgsql")
 			Expect(err).To(BeNil())
 		})

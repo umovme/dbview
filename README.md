@@ -59,7 +59,7 @@ $ dbview install -D ~/tmp/dbview_dump_customer_1329_20170131.pgbkp
   INFO[0004] Done.
 ```
 
-A full detail of options are avaliable with the `--help` option. For example:
+A full detail of options are available with the `--help` option. For example:
 
 ```bash
 $ dbview install --help
@@ -104,7 +104,7 @@ $ dbview replicate
 ```
 > **IMPORTANT:** the user and password credentials are provided by our support team.
 
-A full detail of options are avaliable with the `--help` option. For example:
+A full detail of options are available with the `--help` option. For example:
 
 ```bash
 $ dbview replicate --help                                                                                                                                                                                       21:45   27.09.17
