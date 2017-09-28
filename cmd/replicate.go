@@ -79,19 +79,19 @@ var replicateCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(replicateCmd)
 
-	replicateCmd.PersistentFlags().String("remote-database.ssl", "disable", f("Remote %s", sslConnectionLabel))
+	replicateCmd.PersistentFlags().String("remote-database.ssl", "disable", fmt.Sprintf("Remote %s", sslConnectionLabel))
 	viper.BindPFlag("remote-database.ssl", replicateCmd.PersistentFlags().Lookup("remote-database.ssl"))
 
-	replicateCmd.PersistentFlags().StringP("remote-database.username", "", "postgres", f("Remote %s", dbUserLabel))
+	replicateCmd.PersistentFlags().StringP("remote-database.username", "", "postgres", fmt.Sprintf("Remote %s", dbUserLabel))
 	viper.BindPFlag("remote-database.username", replicateCmd.PersistentFlags().Lookup("remote-database.username"))
 
-	replicateCmd.PersistentFlags().StringP("remote-database.port", "", "9999", f("Remote %s", dbPortLabel))
+	replicateCmd.PersistentFlags().StringP("remote-database.port", "", "9999", fmt.Sprintf("Remote %s", dbPortLabel))
 	viper.BindPFlag("remote-database.port", replicateCmd.PersistentFlags().Lookup("remote-database.port"))
 
-	replicateCmd.PersistentFlags().StringP("remote-database.password", "", "", f("Remote %s", dbUserPasswordLabel))
+	replicateCmd.PersistentFlags().StringP("remote-database.password", "", "", fmt.Sprintf("Remote %s", dbUserPasswordLabel))
 	viper.BindPFlag("remote-database.password", replicateCmd.PersistentFlags().Lookup("remote-database.password"))
 
-	replicateCmd.PersistentFlags().StringP("remote-database.host", "", "dbview.umov.me", f("Remote %s", dbHostLabel))
+	replicateCmd.PersistentFlags().StringP("remote-database.host", "", "dbview.umov.me", fmt.Sprintf("Remote %s", dbHostLabel))
 	viper.BindPFlag("remote-database.host", replicateCmd.PersistentFlags().Lookup("remote-database.host"))
 
 	replicateCmd.PersistentFlags().StringP("remote-database.database", "", "prod_umov_dbview", "Remote Database name")

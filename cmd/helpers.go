@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"runtime"
 	"strings"
 
@@ -15,10 +14,6 @@ const (
 	dbPortLabel         string = "Database Port"
 	dbHostLabel         string = "Database Host"
 )
-
-func f(mask string, values ...interface{}) string {
-	return fmt.Sprintf(mask, values)
-}
 
 // abort: aborts this program on any error
 func abort(err error) {
