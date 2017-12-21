@@ -125,8 +125,6 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		log.Info("Using config file: " + viper.ConfigFileUsed())
-	} else {
-		log.WithError(err).Fatal("fail to load the config file")
 	}
 
 	customerUser = fmt.Sprintf("u%d", viper.GetInt("customer"))
