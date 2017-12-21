@@ -54,22 +54,24 @@ func DropDatabase(connDetail ConnectionDetails, dbName string) error {
 	return err
 }
 
-func checkIfDatabaseExists(connDetail ConnectionDetails, dbName string) (bool, error) {
+// checkIfDatabaseExists connects in the database server and checks if database exists
+func checkIfDatabaseExists(connDetail ConnectionDetails, dbName string) (found bool, err error) {
 
 	var db *sql.DB
-	var err error
-
-	found := false
 
 	if db, err = connect(connDetail); err != nil {
-		return found, err
+		return
 	}
 	defer db.Close()
 
 	totalRows := 0
-	err = db.QueryRow("SELECT count(1) FROM pg_database WHERE datname = $1", dbName).Scan(&totalRows)
+	if err = db.QueryRow("SELECT count(1) FROM pg_database WHERE datname = $1", dbName).Scan(&totalRows); err != nil {
+		return
+	}
 
-	return (totalRows > 0), err
+	found = (totalRows > 0)
+
+	return
 }
 
 /*
