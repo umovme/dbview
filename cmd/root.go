@@ -134,7 +134,5 @@ func initConfig() {
 	if viper.GetBool("debug") {
 		log.Info("Enabling DEBUG messages.")
 		log.SetLevel(log.DebugLevel)
-	} else {
-		log.Info("oi")
 	}
 }
