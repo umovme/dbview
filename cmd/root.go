@@ -105,6 +105,9 @@ func init() {
 	RootCmd.PersistentFlags().String("pgsql-bin", "", "PostgreSQL binaries PATH")
 	viper.BindPFlag("pgsql-bin", RootCmd.PersistentFlags().Lookup("pgsql-bin"))
 
+	RootCmd.PersistentFlags().Bool("debug", false, "Show debug messages")
+	viper.BindPFlag("debug", RootCmd.PersistentFlags().Lookup("debug"))
+
 	RootCmd.PersistentFlags().Bool("help", false, "Show this help message")
 
 }
@@ -127,4 +130,11 @@ func initConfig() {
 	}
 
 	customerUser = fmt.Sprintf("u%d", viper.GetInt("customer"))
+
+	if viper.GetBool("debug") {
+		log.Info("Enabling DEBUG messages.")
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.Info("oi")
+	}
 }
