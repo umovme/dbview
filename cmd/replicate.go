@@ -52,7 +52,10 @@ var replicateCmd = &cobra.Command{
 			Port:     viper.GetInt("local-database.port"),
 			Database: viper.GetString("local-database.target_database"),
 			SslMode:  viper.GetString("local-database.ssl"),
-			Password: viper.GetString("local-database.password")}
+			Password: viper.GetString("local-database.password"),
+		}
+
+		log.Debugf("Using local connection with '%s'", localConn.ToString())
 
 		remoteConn := setup.ConnectionDetails{
 			Username: viper.GetString("remote-database.username"),
@@ -60,7 +63,11 @@ var replicateCmd = &cobra.Command{
 			Port:     viper.GetInt("remote-database.port"),
 			Database: viper.GetString("remote-database.database"),
 			SslMode:  viper.GetString("remote-database.ssl"),
-			Password: viper.GetString("remote-database.password")}
+			Password: viper.GetString("remote-database.password"),
+		}
+
+		log.Debugf("Using remote connection with '%s'", remoteConn.ToString())
+		log.Debugf("Remember to use a remote user with '%s' in their search_path variable!", customerUser)
 
 		newQuery := fmt.Sprintf(
 			"SELECT do_replication_log('%s', '%s', '%s');",
@@ -68,6 +75,7 @@ var replicateCmd = &cobra.Command{
 			localConn.ToString(),
 			fmt.Sprintf("u%s", viper.GetString("customer")))
 
+		log.Debugf("QUERY: %s", newQuery)
 		log.Info("Updating Replication Data...")
 		abort(
 			setup.ExecuteQuery(localConn, newQuery))
