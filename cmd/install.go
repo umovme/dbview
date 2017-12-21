@@ -72,7 +72,6 @@ Please contact us with you have any trouble.`,
 			SslMode:  viper.GetString("local-database.ssl"),
 			Password: viper.GetString("local-database.password")}
 
-		customerUser := fmt.Sprintf("u%d", viper.GetInt("customer"))
 		cleanup(conn, customerUser)
 
 		logInfoBold("Starting up")

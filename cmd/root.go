@@ -125,4 +125,6 @@ func initConfig() {
 	} else {
 		log.WithError(err).Fatal("fail to load the config file")
 	}
+
+	customerUser = fmt.Sprintf("u%d", viper.GetInt("customer"))
 }

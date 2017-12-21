@@ -15,6 +15,8 @@ const (
 	dbHostLabel         string = "Database Host"
 )
 
+var customerUser string
+
 // abort: aborts this program on any error
 func abort(err error) {
 	if err != nil {
