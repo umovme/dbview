@@ -132,20 +132,21 @@ Please contact us with you have any trouble.`,
 	},
 }
 
-func checkInputParameters() bool {
+func checkInputParameters() (ok bool) {
 
 	if viper.GetInt("customer") == 0 {
-		fmt.Println("Missing the customer id!")
-		return false
+		log.Fatal("Missing the customer id! Did you forgot the config file?")
+		return
 	}
 
 	if pDumpFile == "" {
-		fmt.Println("Missing the dump file!")
-		return false
+		log.Fatal("Missing the dump file!")
+		return
 
 	}
 
-	return true
+	ok = true
+	return
 }
 
 func cleanup(conn setup.ConnectionDetails, customerUser string) {
