@@ -44,9 +44,7 @@ import (
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Install the dbview in the database",
-	Long: `
-
-	Install all dependencies of the dbview environment like, 
+	Long: `Install all dependencies of the dbview environment like, 
 users, permissions, database and restores the database dump.
 	
 The database dump are provided by the uMov.me support team. 
