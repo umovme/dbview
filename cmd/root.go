@@ -119,12 +119,13 @@ func initConfig() {
 	viper.AutomaticEnv()           // read in environment variables that match
 
 	if cfgFile != "" { // enable ability to specify config file via flag
+		log.Infof("Using '%s' config file...", cfgFile)
 		viper.SetConfigFile(cfgFile)
 	}
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		log.Info("Using config file: " + viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		log.WithError(err).Warn("Problem parsing config file!")
 	}
 
 	customerUser = fmt.Sprintf("u%d", viper.GetInt("customer"))
