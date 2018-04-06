@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"os"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/apex/log"
 )
@@ -14,6 +17,16 @@ const (
 	dbPortLabel         string = "Database Port"
 	dbHostLabel         string = "Database Host"
 )
+
+func preventAbort() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		for sig := range c {
+			log.Fatalf("Captured %v event, aborting...", sig)
+		}
+	}()
+}
 
 var customerUser string
 

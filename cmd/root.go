@@ -67,6 +67,8 @@ func Execute() {
 }
 
 func init() {
+
+	preventAbort()
 	cobra.OnInitialize(initConfig)
 
 	// ugly messages on windows forces me to disable this pretty messages
