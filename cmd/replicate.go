@@ -32,11 +32,16 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/apex/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/umovme/dbview/setup"
+)
+
+const (
+	daemonInterval = 30 * time.Second
 )
 
 // replicateCmd represents the replicate command
@@ -45,47 +50,75 @@ var replicateCmd = &cobra.Command{
 	Short: "Runs the replication functions",
 	Long:  `Runs the replication functions and updates the target database at the latest version`,
 	Run: func(cmd *cobra.Command, args []string) {
+		logInfoBold("Starting dbview replication")
 
-		localConn := setup.ConnectionDetails{
-			Username: viper.GetString("local-database.username"),
-			Host:     viper.GetString("local-database.host"),
-			Port:     viper.GetInt("local-database.port"),
-			Database: viper.GetString("local-database.target_database"),
-			SslMode:  viper.GetString("local-database.ssl"),
-			Password: viper.GetString("local-database.password"),
+		if viper.GetBool("daemon") {
+
+			dur := viper.GetDuration("refresh-interval")
+			if dur < daemonInterval {
+				log.Fatalf("Refresh interval (%s) must greater or equals than %s.\n", dur, daemonInterval)
+			}
+
+			logInfoBold("Starting in daemon mode")
+
+			ticker := time.NewTicker(dur)
+			for ; true; <-ticker.C {
+				runReplicate()
+			}
 		}
-
-		log.Debugf("Using local connection with '%s'", localConn.ToString())
-
-		remoteConn := setup.ConnectionDetails{
-			Username: viper.GetString("remote-database.username"),
-			Host:     viper.GetString("remote-database.host"),
-			Port:     viper.GetInt("remote-database.port"),
-			Database: viper.GetString("remote-database.database"),
-			SslMode:  viper.GetString("remote-database.ssl"),
-			Password: viper.GetString("remote-database.password"),
-		}
-
-		log.Debugf("Using remote connection with '%s'", remoteConn.ToString())
-		log.Debugf("Remember to use a remote user with '%s' in their search_path variable!", customerUser)
-
-		newQuery := fmt.Sprintf(
-			"SELECT do_replication_log('%s', '%s', '%s');",
-			remoteConn.ToString(),
-			localConn.ToString(),
-			fmt.Sprintf("u%s", viper.GetString("customer")))
-
-		log.Debugf("QUERY: %s", newQuery)
-		log.Info("Updating Replication Data...")
-		abort(
-			setup.ExecuteQuery(localConn, newQuery))
+		runReplicate()
 
 		log.Info("Done.")
 	},
 }
 
+func runReplicate() {
+
+	localConn := setup.ConnectionDetails{
+		Username: viper.GetString("local-database.username"),
+		Host:     viper.GetString("local-database.host"),
+		Port:     viper.GetInt("local-database.port"),
+		Database: viper.GetString("local-database.target_database"),
+		SslMode:  viper.GetString("local-database.ssl"),
+		Password: viper.GetString("local-database.password"),
+	}
+
+	log.Debugf("Using local connection with '%s'", localConn.ToString())
+
+	remoteConn := setup.ConnectionDetails{
+		Username: viper.GetString("remote-database.username"),
+		Host:     viper.GetString("remote-database.host"),
+		Port:     viper.GetInt("remote-database.port"),
+		Database: viper.GetString("remote-database.database"),
+		SslMode:  viper.GetString("remote-database.ssl"),
+		Password: viper.GetString("remote-database.password"),
+	}
+
+	log.Debugf("Using remote connection with '%s'", remoteConn.ToString())
+	log.Debugf("Remember to use a remote user with '%s' in their search_path variable!", customerUser)
+
+	newQuery := fmt.Sprintf(
+		"SELECT do_replication_log('%s', '%s', '%s');",
+		remoteConn.ToString(),
+		localConn.ToString(),
+		fmt.Sprintf("u%s", viper.GetString("customer")))
+
+	log.Debugf("QUERY: %s", newQuery)
+	log.Info("Updating Replication Data...")
+	if err := setup.ExecuteQuery(localConn, newQuery); err != nil {
+		log.WithError(err).Error("fail to replicate the data")
+	}
+}
+
 func init() {
 	RootCmd.AddCommand(replicateCmd)
+
+	// daemon mode related
+	replicateCmd.PersistentFlags().Bool("daemon", false, "Run as daemon ")
+	viper.BindPFlag("daemon", replicateCmd.PersistentFlags().Lookup("daemon"))
+
+	replicateCmd.PersistentFlags().Duration("refresh-interval", daemonInterval, "Refresh interval for daemon mode")
+	viper.BindPFlag("refresh-interval", replicateCmd.PersistentFlags().Lookup("refresh-interval"))
 
 	replicateCmd.PersistentFlags().String("remote-database.ssl", "disable", fmt.Sprintf("Remote %s", sslConnectionLabel))
 	viper.BindPFlag("remote-database.ssl", replicateCmd.PersistentFlags().Lookup("remote-database.ssl"))
