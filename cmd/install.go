@@ -95,7 +95,7 @@ Please contact us with you have any trouble.`,
 		conn.Database = viper.GetString("local-database.target_database")
 
 		abort(
-			setup.CreateExtensionsInDatabase(conn, []string{"hstore", "dblink", "pg_freespacemap", "postgis", "tablefunc", "unaccent"}))
+			setup.CreateExtensionsInDatabase(conn, []string{"hstore", "dblink", "tablefunc", "unaccent"}))
 
 		exists, err := setup.CheckIfSchemaExists(conn, "dbview")
 		abort(err)

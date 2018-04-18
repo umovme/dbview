@@ -152,7 +152,7 @@ var _ = Describe("Setup database user and groups", func() {
 			newConn := dbConnectionInfo
 			newConn.Database = tempDBName
 
-			err = CreateExtensionsInDatabase(newConn, []string{"hstore", "dblink", "pg_freespacemap", "postgis", "tablefunc", "unaccent"})
+			err = CreateExtensionsInDatabase(newConn, []string{"hstore", "dblink", "tablefunc", "unaccent"})
 			Expect(err).To(BeNil())
 
 			options := RestoreOptions{
