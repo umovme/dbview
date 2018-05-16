@@ -98,9 +98,8 @@ func runReplicate() {
 	log.Debugf("Remember to use a remote user with '%s' in their search_path variable!", customerUser)
 
 	newQuery := fmt.Sprintf(
-		"SELECT do_replication_log('%s', '%s', '%s');",
+		"SELECT do_replication_log('%s', '%s');",
 		remoteConn.ToString(),
-		localConn.ToString(),
 		fmt.Sprintf("u%s", viper.GetString("customer")))
 
 	log.Debugf("QUERY: %s", newQuery)
