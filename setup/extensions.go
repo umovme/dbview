@@ -3,6 +3,8 @@ package setup
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/apex/log"
 )
 
 // CreateExtensionsInDatabase : Creates extensions in the target database
@@ -24,7 +26,11 @@ func CreateExtensionsInDatabase(connDetail ConnectionDetails, extensions []strin
 		}
 
 		if available {
-			_, err = db.Exec(fmt.Sprintf("CREATE EXTENSION IF NOT EXISTS %s;", extension))
+
+			query := fmt.Sprintf("CREATE EXTENSION IF NOT EXISTS %s;", extension)
+
+			log.Debugf("Running %s", query)
+			_, err = db.Exec(query)
 			if err != nil {
 				return err
 			}
