@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
+
+	"github.com/apex/log"
 )
 
 // RestoreOptions : Define the options for restore a dump file into a database
@@ -24,12 +25,11 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 		pgRestoreBin = fmt.Sprintf("%s/pg_restore", pgsqlBinPATH)
 	}
 
-	args := fmt.Sprintf(
-		"-U %s -d %s %s %s",
-		connDetail.Username,
-		connDetail.Database,
-		strings.Join(options.CustomArgs, " "),
-		dumpFile)
+	// conn := formatConnectionOptions(connDetail)
+	args := formatConnectionOptions(connDetail)
+
+	args = append(args, options.CustomArgs...)
+	args = append(args, dumpFile)
 
 	if connDetail.Password != "" {
 		err := os.Setenv("PGPASSWORD", connDetail.Password)
@@ -39,7 +39,7 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 		}
 	}
 
-	log.Debugf("%s %#v", pgRestoreBin, args)
+	log.Debugf("%s %#v\n", pgRestoreBin, args)
 
 	cmd := exec.Command(pgRestoreBin, args...)
 
@@ -58,4 +58,24 @@ func RestoreDumpFile(connDetail ConnectionDetails, dumpFile string, options Rest
 	}
 
 	return nil
+}
+
+func formatConnectionOptions(connDetail ConnectionDetails) []string {
+
+	out := []string{}
+
+	if connDetail.Username != "" {
+		out = append(out, "--user="+connDetail.Username)
+	}
+	if connDetail.Host != "" {
+		out = append(out, "--host="+connDetail.Host)
+	}
+	if connDetail.Database != "" {
+		out = append(out, "--dbname="+connDetail.Database)
+	}
+	if connDetail.Port > 0 {
+		out = append(out, fmt.Sprintf("--port=%d", connDetail.Port))
+	}
+
+	return out
 }
