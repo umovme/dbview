@@ -42,8 +42,8 @@ func Test_formatConnectionOptions(t *testing.T) {
 		wantOut []string
 	}{
 		{name: "empty connection", args: makeConnection(false, false, false, false), wantOut: []string{}},
-		{name: "custom connection with db and user", args: makeConnection(true, false, true, false), wantOut: []string{"--user=" + testUser, "--dbname=" + testDB}},
-		{name: "custom connection with all options", args: makeConnection(true, true, true, true), wantOut: []string{"--user=" + testUser, "--host=" + testHost, "--dbname=" + testDB, fmt.Sprintf("--port=%d", testPort)}},
+		{name: "custom connection with db and user", args: makeConnection(true, false, true, false), wantOut: []string{"--username=" + testUser, "--dbname=" + testDB}},
+		{name: "custom connection with all options", args: makeConnection(true, true, true, true), wantOut: []string{"--username=" + testUser, "--host=" + testHost, "--dbname=" + testDB, fmt.Sprintf("--port=%d", testPort)}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

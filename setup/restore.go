@@ -65,7 +65,7 @@ func formatConnectionOptions(connDetail ConnectionDetails) []string {
 	out := []string{}
 
 	if connDetail.Username != "" {
-		out = append(out, "--user="+connDetail.Username)
+		out = append(out, "--username="+connDetail.Username)
 	}
 	if connDetail.Host != "" {
 		out = append(out, "--host="+connDetail.Host)
