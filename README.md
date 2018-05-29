@@ -138,7 +138,7 @@ Global Flags:
 
 ### SystemD Service
 
-With the `--daemon` option its possible start it as a systemD service:
+With the `--daemon` option its possible start it as a systemD service. Create a file `/usr/lib/systemd/system/dbview.service` with the content bellow:
 
 ```
 [Unit]
@@ -156,7 +156,13 @@ ExecStart="/opt/dbview/dbview" replicate --config "${CONFIG_FILE}" ${CMD_OPTIONS
 [Install]
 WantedBy=multi-user.target
 ```
-w> Update `CMD_DIR`, `CMD_OPTIONS`, and `CONFIG_FILE` for different PATH and configurations.
+> Update `CMD_DIR`, `CMD_OPTIONS`, and `CONFIG_FILE` for different PATH and configurations.
+
+Then reload systemd configurations to use your service:
+
+```
+systemctl daemon-reload
+```
 
 
 ## Getting support
