@@ -107,32 +107,57 @@ $ dbview replicate
 A full detail of options are available with the `--help` option. For example:
 
 ```bash
-$ dbview replicate --help                                                                                                                                                                                       21:45   27.09.17
-Runs the replication functions and updates the target database at the latest version
+$ dbview replicate --help                                                                  Runs the replication functions and updates the target database at the latest version
 
 Usage:
   dbview replicate [flags]
 
 Flags:
+      --daemon                            Run as daemon
+      --refresh-interval duration         Refresh interval for daemon mode (default 30s)
       --remote-database.database string   Remote Database name (default "prod_umov_dbview")
-      --remote-database.host string       Remote [Database Host] (default "dbview.umov.me")
-      --remote-database.password string   Remote [Database password]
-      --remote-database.port string       Remote [Database Port] (default "9999")
-      --remote-database.ssl string        Remote [SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported] (default "disable")
-      --remote-database.username string   Remote [Database User] (default "postgres")
+      --remote-database.host string       Remote Database Host (default "dbview.umov.me")
+      --remote-database.password string   Remote Database password
+      --remote-database.port string       Remote Database Port (default "9999")
+      --remote-database.ssl string        Remote SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported (default "disable")
+      --remote-database.username string   Remote Database User (default "postgres")
 
 Global Flags:
       --config string                    config file (default is $HOME/.dbview.yaml)
       --customer int                     Your customer ID
+      --debug                            Show debug messages
       --help                             Show this help message
   -d, --local-database.database string   Local maintenance database. Used for administrative tasks. (default "postgres")
-  -h, --local-database.host string       Local [Database Host] (default "127.0.0.1")
-  -P, --local-database.password string   Local [Database password]
-  -p, --local-database.port string       Local [Database Port]
-      --local-database.ssl string        Local [SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported] (default "disable")
-  -U, --local-database.username string   Local [Database User] (default "postgres")
+  -h, --local-database.host string       Local Database Host (default "127.0.0.1")
+  -P, --local-database.password string   Local Database password
+  -p, --local-database.port string       Local Database Port
+      --local-database.ssl string        Local SSL connection: 'require', 'verify-full', 'verify-ca', and 'disable' supported (default "disable")
+  -U, --local-database.username string   Local Database User (default "postgres")
       --pgsql-bin string                 PostgreSQL binaries PATH
 ```
+
+### SystemD Service
+
+With the `--daemon` option its possible start it as a systemD service:
+
+```
+[Unit]
+Description=DBView Replication
+After=network.target
+
+[Service]
+Environment=CMD_OPTIONS=--daemon --duration 35s
+Environment=CONFIG_FILE=/opt/dbview/config.toml
+Type=simple
+User=root
+Group=root
+ExecStart="/opt/dbview/dbview" replicate --config "${CONFIG_FILE}" ${CMD_OPTIONS}
+
+[Install]
+WantedBy=multi-user.target
+```
+w> Update `CMD_DIR`, `CMD_OPTIONS`, and `CONFIG_FILE` for different PATH and configurations.
+
 
 ## Getting support
 
