@@ -15,6 +15,7 @@ fi
 
 
 ## HERE HAPPENS THE MAGIC
+make tools
 git tag -a "${TAG}" && \
 git push origin "${TAG}" && \
 goreleaser --rm-dist
