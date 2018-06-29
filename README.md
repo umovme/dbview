@@ -9,9 +9,7 @@ This project contains a CLI to to help our customers replicate their data on it 
 This projects uses the packages bellow to build:
 
 ```bash
-go get -u -v github.com/spf13/cobra
-go get -u -v github.com/goreleaser/goreleaser
-go get -u -v github.com/apex/log
+make tools
 ```
 
 And (for now) have a ruby gem dependency:
