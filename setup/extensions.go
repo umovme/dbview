@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/apex/log"
+	"github.com/go-playground/log"
 )
 
 // CreateExtensionsInDatabase : Creates extensions in the target database

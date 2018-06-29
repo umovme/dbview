@@ -35,7 +35,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/apex/log"
+	"github.com/go-playground/log"
 	"github.com/spf13/cobra"
 	"github.com/umovme/dbview/setup"
 )

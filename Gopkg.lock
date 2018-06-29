@@ -2,19 +2,34 @@
 
 
 [[projects]]
-  name = "github.com/apex/log"
-  packages = [
-    ".",
-    "handlers/text"
-  ]
-  revision = "0296d6eb16bb28f8a0c55668affcf4876dc269be"
-  version = "v1.0.0"
+  branch = "master"
+  name = "bitbucket.org/umovme/bootstrapper"
+  packages = ["helpers"]
+  revision = "caa72943702e37c11a5ee7c145c0acee96637d89"
 
 [[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
   version = "v1.4.7"
+
+[[projects]]
+  name = "github.com/go-playground/ansi"
+  packages = ["."]
+  revision = "777788a9be1a7296979a999c86b251fc777077a9"
+  version = "v2.1.0"
+
+[[projects]]
+  name = "github.com/go-playground/errors"
+  packages = ["."]
+  revision = "14d2d30656a95a5fa5a17d2e33540269eda5f158"
+  version = "v3.2.1"
+
+[[projects]]
+  name = "github.com/go-playground/log"
+  packages = ["."]
+  revision = "736ecb55f80c7121af3754a7ea62e96733451fe1"
+  version = "v6.3.0"
 
 [[projects]]
   branch = "master"
@@ -111,12 +126,6 @@
   version = "v1.2.0"
 
 [[projects]]
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
-
-[[projects]]
   name = "github.com/spf13/afero"
   packages = [
     ".",
@@ -156,6 +165,12 @@
 
 [[projects]]
   branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["ssh/terminal"]
+  revision = "a49355c7e3f8fe157a85be2f77e6e269a0f89602"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/net"
   packages = [
     "html",
@@ -167,7 +182,10 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix"]
+  packages = [
+    "unix",
+    "windows"
+  ]
   revision = "7138fd3d9dc8335c567ca206f4333fb75eb05d56"
 
 [[projects]]
@@ -206,6 +224,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "92f12c7697414a9aac1e0f19ac26625defe2627d5381fcdf064a37b0147007c4"
+  inputs-digest = "abaa1b01314d197db4482b22783fe8652cbf4f391f88a80b47862ab761f89f52"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/apex/log"
+	"github.com/go-playground/log"
 )
 
 // RestoreOptions : Define the options for restore a dump file into a database

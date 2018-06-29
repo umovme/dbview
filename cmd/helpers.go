@@ -7,7 +7,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/apex/log"
+	"github.com/go-playground/log"
 )
 
 const (

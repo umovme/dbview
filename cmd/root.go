@@ -33,10 +33,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"runtime"
 
-	"github.com/apex/log"
-	"github.com/apex/log/handlers/text"
+	"github.com/go-playground/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -71,11 +69,7 @@ func init() {
 	preventAbort()
 	cobra.OnInitialize(initConfig)
 
-	// ugly messages on windows forces me to disable this pretty messages
-	if runtime.GOOS != "windows" {
-		log.SetHandler(text.Default)
-	}
-	log.SetLevel(log.InfoLevel)
+	setupLogger()
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
@@ -132,8 +126,4 @@ func initConfig() {
 
 	customerUser = fmt.Sprintf("u%d", viper.GetInt("customer"))
 
-	if viper.GetBool("debug") {
-		log.Info("Enabling DEBUG messages.")
-		log.SetLevel(log.DebugLevel)
-	}
 }
