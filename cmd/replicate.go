@@ -74,6 +74,13 @@ var replicateCmd = &cobra.Command{
 
 func runReplicate() {
 
+	rowLimit := viper.GetInt32("options.row_limit")
+
+	if rowLimit > 10000 {
+		log.Warnf("The maximum value for row limit is 10.000 rows. Fixing it in 10k rows.")
+		rowLimit = 10000
+	}
+
 	localConn := setup.ConnectionDetails{
 		Username: viper.GetString("local-database.username"),
 		Host:     viper.GetString("local-database.host"),
@@ -101,11 +108,14 @@ func runReplicate() {
 	setup.ExecuteQuery(localConn, setup.ReplicationLogFunction)
 
 	newQuery := fmt.Sprintf(
-		"SELECT do_replication_log('%s', '%s');",
+		"SELECT do_replication_log('%s', 'u%s', %d);",
 		remoteConn.ToString(),
-		fmt.Sprintf("u%s", viper.GetString("customer")))
+		viper.GetString("customer"),
+		rowLimit,
+	)
 
 	log.Debugf("QUERY: %s", newQuery)
+
 	log.Info("Updating Replication Data...")
 	if err := setup.ExecuteQuery(localConn, newQuery); err != nil {
 		log.WithError(err).Error("fail to replicate the data")
@@ -139,5 +149,8 @@ func init() {
 
 	replicateCmd.PersistentFlags().StringP("remote-database.database", "", "prod_umov_dbview", "Remote Database name")
 	viper.BindPFlag("local-database.database", replicateCmd.PersistentFlags().Lookup("local-database.database"))
+
+	replicateCmd.PersistentFlags().Int32P("options.row_limit", "l", 100, "row limit of each replication action")
+	viper.BindPFlag("options.row_limit", replicateCmd.PersistentFlags().Lookup("options.row_limit"))
 
 }

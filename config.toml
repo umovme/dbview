@@ -26,3 +26,7 @@ ssl = "disable"
 host = "dbview.umov.me"
 database = "prod_umov_dbview"
 port = 9999
+
+
+[options]
+row_limit = 100

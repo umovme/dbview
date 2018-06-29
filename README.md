@@ -107,13 +107,15 @@ $ dbview replicate
 A full detail of options are available with the `--help` option. For example:
 
 ```bash
-$ dbview replicate --help                                                                  Runs the replication functions and updates the target database at the latest version
+$ dbview replicate --help
+Runs the replication functions and updates the target database at the latest version
 
 Usage:
   dbview replicate [flags]
 
 Flags:
       --daemon                            Run as daemon
+  -l, --options.row_limit int32           row limit of each replication action (default 100)
       --refresh-interval duration         Refresh interval for daemon mode (default 30s)
       --remote-database.database string   Remote Database name (default "prod_umov_dbview")
       --remote-database.host string       Remote Database Host (default "dbview.umov.me")

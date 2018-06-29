@@ -24,16 +24,17 @@ ReplicationLogFunction : Contains a SQL Command to create the replication functi
 */
 const ReplicationLogFunction string = `DROP FUNCTION IF EXISTS do_replication_log(TEXT, TEXT, TEXT, TIMESTAMPTZ);
 DROP FUNCTION IF EXISTS do_replication_log(TEXT, TEXT, TEXT);
+DROP FUNCTION IF EXISTS do_replication_log(TEXT, TEXT);
 CREATE OR REPLACE FUNCTION do_replication_log(
 	remote_connection_info TEXT,
-	schema_name TEXT
+	schema_name TEXT,
+	rows_limit INTEGER
 )
 RETURNS TEXT AS
 $$
 DECLARE
 	rDeltas 				RECORD;
 	remote_connection_id	TEXT;
-	rows_limit 				INTEGER DEFAULT 100;
 	applied_deltas 			INTEGER DEFAULT 0;
 	query					TEXT;
 	last_transactionlog		BIGINT;
