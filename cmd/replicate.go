@@ -42,6 +42,7 @@ import (
 
 const (
 	daemonInterval = 30 * time.Second
+	maxRowsAllowed = 10000
 )
 
 // replicateCmd represents the replicate command
@@ -76,9 +77,9 @@ func runReplicate() {
 
 	rowLimit := viper.GetInt32("options.row_limit")
 
-	if rowLimit > 10000 {
+	if rowLimit > maxRowsAllowed {
 		log.Warnf("The maximum value for row limit is 10.000 rows. Fixing it in 10k rows.")
-		rowLimit = 10000
+		rowLimit = maxRowsAllowed
 	}
 
 	localConn := setup.ConnectionDetails{
