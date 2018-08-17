@@ -13,16 +13,14 @@ var (
 	pgsqlBinPATH string
 )
 
-/*
-ConnectionDetails : defines details about a new connection
-*/
+// ConnectionDetails  defines details about a new connection
 type ConnectionDetails struct {
-	Username string
-	Password string
-	Host     string
-	Database string
-	SslMode  string
-	Port     int
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	Host     string `yaml:"host"`
+	Database string `yaml:"database"`
+	SslMode  string `yaml:"ssl"`
+	Port     int    `yaml:"port"`
 }
 
 var c *ConnectionDetails

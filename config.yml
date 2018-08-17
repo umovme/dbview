@@ -1,0 +1,37 @@
+# DBView configuration file
+
+## on windows path, use the '/', eg:
+pgsql-bin: "C:/Program Files/PostgreSQL/9.3/bin"
+
+## default settings for local database
+### this settings are used for create a default database on 'install' action
+### and as a default value to 'customers' databases configurations
+local-database:
+    ssl: disable
+    username: postgres
+    password: postgres
+    host: 127.0.0.1
+    database: postgres
+    port: 5432
+
+
+## settings for each customer
+### this overrides 'local-database' config
+customers:
+  u15993:
+    username: dbview
+    database: umovme_dbview_db
+  u1329:
+    username: dbview
+    database: umovme_dbview_db
+
+remote-database:
+  ssl: disable
+  # username: ""
+  # password: ""
+  host: dbview.umov.me
+  database: prod_umov_dbview
+  port: 9999
+
+options:
+  row_limit: 100
