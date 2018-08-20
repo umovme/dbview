@@ -64,6 +64,9 @@ func Execute() {
 	}
 }
 
+// Defines the hole config
+var appConfig Config
+
 func init() {
 
 	preventAbort()
@@ -76,30 +79,6 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dbview.yaml)")
-
-	RootCmd.PersistentFlags().String("local-database.ssl", "disable", fmt.Sprintf("Local %s", sslConnectionLabel))
-	viper.BindPFlag("local-database.ssl", RootCmd.PersistentFlags().Lookup("local-database.ssl"))
-
-	RootCmd.PersistentFlags().StringP("local-database.username", "U", "postgres", fmt.Sprintf("Local %s", dbUserLabel))
-	viper.BindPFlag("local-database.username", RootCmd.PersistentFlags().Lookup("local-database.username"))
-
-	RootCmd.PersistentFlags().StringP("local-database.port", "p", "", fmt.Sprintf("Local %s", dbPortLabel))
-	viper.BindPFlag("local-database.port", RootCmd.PersistentFlags().Lookup("local-database.port"))
-
-	RootCmd.PersistentFlags().StringP("local-database.password", "P", "", fmt.Sprintf("Local %s", dbUserPasswordLabel))
-	viper.BindPFlag("local-database.password", RootCmd.PersistentFlags().Lookup("local-database.password"))
-
-	RootCmd.PersistentFlags().StringP("local-database.host", "h", "127.0.0.1", fmt.Sprintf("Local %s", dbHostLabel))
-	viper.BindPFlag("local-database.host", RootCmd.PersistentFlags().Lookup("local-database.host"))
-
-	RootCmd.PersistentFlags().StringP("local-database.database", "d", "postgres", "Local maintenance database. Used for administrative tasks.")
-	viper.BindPFlag("local-database.database", RootCmd.PersistentFlags().Lookup("local-database.database"))
-
-	RootCmd.PersistentFlags().Int("customer", 0, "Your customer ID")
-	viper.BindPFlag("customer", RootCmd.PersistentFlags().Lookup("customer"))
-
-	RootCmd.PersistentFlags().String("pgsql-bin", "", "PostgreSQL binaries PATH")
-	viper.BindPFlag("pgsql-bin", RootCmd.PersistentFlags().Lookup("pgsql-bin"))
 
 	RootCmd.PersistentFlags().Bool("debug", false, "Show debug messages")
 	viper.BindPFlag("debug", RootCmd.PersistentFlags().Lookup("debug"))

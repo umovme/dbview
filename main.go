@@ -30,8 +30,46 @@
 
 package main
 
-import "github.com/umovme/dbview/cmd"
+import (
+	"io/ioutil"
+
+	"github.com/davecgh/go-spew/spew"
+	"github.com/umovme/dbview/cmd"
+	yaml "gopkg.in/yaml.v2"
+	// yaml "gopkg.in/yaml.v2"
+	// yaml "gopkg.in/yaml.v2"
+)
 
 func main() {
 	cmd.Execute()
+}
+
+func main2() {
+	/*
+		viper.SetConfigName("config") // name of config file (without extension)
+		viper.SetConfigType("yaml")
+		// viper.AddConfigPath("/etc/appname/")  // path to look for the config file in
+		// viper.AddConfigPath("$HOME/.appname") // call multiple times to add many search paths
+		viper.AddConfigPath(".")    // optionally look for config in the working directory
+		err := viper.ReadInConfig() // Find and read the config file
+		if err != nil {             // Handle errors reading the config file
+			panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		}
+
+		spew.Dump(viper.AllSettings()) */
+	// /*
+	// fmt.Printf("Oi\n")
+	cat, err := ioutil.ReadFile("./config.yml")
+
+	if err != nil {
+		panic(err)
+	}
+
+	var p cmd.Config
+	err = yaml.Unmarshal(cat, &p)
+	if err != nil {
+		panic(err)
+	}
+	spew.Dump(p)
+
 }
