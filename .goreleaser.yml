@@ -23,6 +23,13 @@ archive:
 
 
 nfpm:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  replacements:
+    amd64: 64-bit
+    386: 32-bit
+    darwin: macOS
+    linux: Tux
+
   vendor: uMov.me Team
   homepage: https://umov.me
   license: BSD-3-Clause
