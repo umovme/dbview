@@ -38,6 +38,7 @@ DECLARE
 	applied_deltas 			INTEGER DEFAULT 0;
 	query					TEXT;
 	last_transactionlog		BIGINT;
+	remote_transaction_count		    BIGINT;
 BEGIN
 	-- LOCK to prevent concurrent running in the same environment
 	IF pg_try_advisory_lock(substr(schema_name,2)::bigint) IS FALSE THEN
@@ -59,12 +60,37 @@ BEGIN
 	INTO	last_transactionlog
 	FROM	transactionlog;
 
-	-- Query to get deltas to be applied in local copy
-	query := 'SELECT trl_id, trl_datehour, ';
-	query := query || E' CASE WHEN trl_statements ~ \'^BEGIN;\' THEN substr(trl_statements, 8, length(trl_statements)-15) ELSE trl_statements END, ';
-	query := query || ' trl_txid FROM transactionlog ';
-	query := query || ' WHERE trl_id > '|| last_transactionlog || ' ORDER BY trl_id LIMIT ' || rows_limit;
+	RAISE LOG '(%) Validating last applied transaction', schema_name;
 
+	SELECT INTO query
+		FORMAT('SELECT COUNT(1) as total FROM transactionlog where trl_id = %s', last_transactionlog );
+
+	SELECT total INTO remote_transaction_count
+	FROM dblink(remote_connection_id, query)
+	 as t1(total bigint);
+
+	IF remote_transaction_count = 0 THEN
+		PERFORM public.dblink_disconnect(remote_connection_id);
+		RAISE EXCEPTION
+			'(%) Expected transaction % does not exist in remote host. Please contact the uMov.me Support Team to get a new dump!',
+			schema_name, (last_transactionlog + 1);
+	END IF;
+
+
+	-- Query to get deltas to be applied in local copy
+	SELECT INTO QUERY
+		FORMAT($QUERY$
+SELECT 
+  trl_id,
+  trl_datehour,
+  CASE WHEN trl_statements ~ '^BEGIN;' THEN substr(trl_statements, 8, length(trl_statements)-15) ELSE trl_statements END,
+  trl_txid
+FROM transactionlog
+WHERE trl_id > %s
+ORDER BY trl_id
+LIMIT %s;
+$QUERY$, last_transactionlog, rows_limit);
+	
 	RAISE LOG '(%) Getting last % deltas do be applied in your local copy of DBView', schema_name, rows_limit;
 	FOR rDeltas IN
 		SELECT	*
@@ -77,14 +103,6 @@ BEGIN
 				)
 	LOOP
 		RAISE DEBUG '(%) %', schema_name, rDeltas;
-
-		-- Check the order of the remote and local transactionlog do be applied
-		IF applied_deltas = 0 AND rDeltas.trl_id <> (last_transactionlog + 1) AND last_transactionlog != 0 THEN
-			PERFORM public.dblink_disconnect(remote_connection_id);
-			RAISE EXCEPTION
-				'(%) Expected transaction % does not exist in remote host. Please contact the uMov.me Support Team to get a new dump!',
-				schema_name, (last_transactionlog + 1);
-		END IF;
 
 		RAISE LOG '(%) . Applying delta % from dbview remote transactionlog table', schema_name, rDeltas.trl_id;
 
