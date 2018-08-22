@@ -105,9 +105,6 @@ func runReplicate() {
 	log.Debugf("Using remote connection with '%s'", remoteConn.ToString())
 	log.Debugf("Remember to use a remote user with '%s' in their search_path variable!", customerUser)
 
-	log.Info("Updating the database functions")
-	setup.ExecuteQuery(localConn, setup.ReplicationLogFunction)
-
 	newQuery := fmt.Sprintf(
 		"SELECT do_replication_log('%s', 'u%s', %d);",
 		remoteConn.ToString(),
