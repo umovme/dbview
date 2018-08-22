@@ -31,7 +31,8 @@ func updateReplicationFunc() {
 		Password: viper.GetString("local-database.password"),
 	}
 
-	log.Info("Updating the database functions")
+	log.Info("Updating the database functions...")
+	log.Debugf("QUERY: %s", setup.ReplicationLogFunction)
 	if err := setup.ExecuteQuery(localConn, setup.ReplicationLogFunction); err != nil {
 		log.WithError(err).Error("error updating replication function on database")
 	}
