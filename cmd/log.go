@@ -107,17 +107,26 @@ func setHandler() log.Handler {
 func setupLogger() {
 
 	var err error
+	var defaultTimeZoneErr bool
 	loc, err = time.LoadLocation(defaultTZ)
 	if err != nil {
-		fmt.Println("Default TZ", defaultTZ, " Not found. Falling back to local timezone.")
+		defaultTimeZoneErr = true
 		loc = time.Local
 	}
 
 	if viper.GetBool("debug") {
-		log.Info("Enabling DEBUG messages.")
 		defaultLogLevels = append(defaultLogLevels, log.DebugLevel)
 	}
 
 	log.AddHandler(setHandler(), defaultLogLevels...)
 
+	log.Infof("DBView CLI v%s", version)
+
+	if viper.GetBool("debug") {
+		log.Info("Enabling DEBUG messages.")
+	}
+
+	if defaultTimeZoneErr {
+		log.Info("Default TZ", defaultTZ, " Not found. Falling back to local timezone.")
+	}
 }

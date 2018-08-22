@@ -68,9 +68,6 @@ func init() {
 
 	preventAbort()
 	cobra.OnInitialize(initConfig)
-
-	setupLogger()
-
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
@@ -113,6 +110,8 @@ func initConfig() {
 	viper.SetConfigName(".dbview") // name of config file (without extension)
 	viper.AddConfigPath("$HOME")   // adding home directory as first search path
 	viper.AutomaticEnv()           // read in environment variables that match
+
+	setupLogger()
 
 	if cfgFile != "" { // enable ability to specify config file via flag
 		log.Infof("Using '%s' config file...", cfgFile)
