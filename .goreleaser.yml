@@ -32,7 +32,7 @@ nfpm:
   description: Manages the local dbview database providing tools to install, configure and update the replication system.
   # Formats to generate as output
   formats:
-    - rpm
+    #    - rpm
     - deb
   files:
     "config.toml": "/etc/dbview/config.toml"
