@@ -1,7 +1,7 @@
 # .goreleaser.yml
 # Build customization
 builds:
-  - binary: dbview 
+  - binary: dbview
     goos:
       - windows
       - darwin
@@ -30,10 +30,11 @@ nfpm:
   maintainer: uMov.me Team <devteam-umovme@googlegroups.com>
 
   description: Manages the local DBView database providing tools to install, configure and update the replication system.
-  # Formats to generate as output
+
   formats:
     - rpm
     - deb
-  config_files:
-    "config.toml": "/etc/dbview/config.toml"
-		"systemd.service": "/usr/lib/systemd/system/dbview.service"
+
+  files:
+    "config.toml" : "/etc/dbview/config.toml"
+    "systemd.service" : "/usr/lib/systemd/system/dbview.service"
