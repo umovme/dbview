@@ -25,6 +25,7 @@ archive:
 nfpm:
   vendor: uMov.me Team
   homepage: https://umov.me
+  license: BSD-3-Clause
 
   maintainer: uMov.me Team <devteam-umovme@googlegroups.com>
 
