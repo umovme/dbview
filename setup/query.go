@@ -80,7 +80,7 @@ BEGIN
 	-- Query to get deltas to be applied in local copy
 	SELECT INTO QUERY
 		FORMAT($QUERY$
-SELECT 
+SELECT
   trl_id,
   trl_datehour,
   CASE WHEN trl_statements ~ '^BEGIN;' THEN substr(trl_statements, 8, length(trl_statements)-15) ELSE trl_statements END,
@@ -90,7 +90,7 @@ WHERE trl_id > %s
 ORDER BY trl_id
 LIMIT %s;
 $QUERY$, last_transactionlog, rows_limit);
-	
+
 	RAISE LOG '(%) Getting last % deltas do be applied in your local copy of DBView', schema_name, rows_limit;
 	FOR rDeltas IN
 		SELECT	*
