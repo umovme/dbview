@@ -121,10 +121,7 @@ Please contact us with you have any trouble.`,
 		abort(
 			setup.RestoreDumpFile(conn, pDumpFile, setup.RestoreOptions{CustomArgs: restoreArgs}))
 
-		log.Info("Installing the database functions")
-
-		abort(
-			setup.ExecuteQuery(conn, setup.ReplicationLogFunction))
+		updateReplicationFunc()
 
 		log.Info("Done.")
 	},
