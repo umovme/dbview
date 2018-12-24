@@ -2,10 +2,10 @@
 
 ## Wanted features
 
-[ ] Action to configure system automatically
-[ ] Prometheus metrics on daemon mode
+- [ ] Action to configure system automatically
+- [ ] Prometheus metrics on daemon mode
 
 ## Stuff to refactor
 
-[ ] replication function 100% golang
+- [ ] replication function 100% golang
 
