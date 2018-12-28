@@ -1,0 +1,14 @@
+[Unit]
+Description=DBView Replication
+After=network.target
+
+[Service]
+Environment=CMD_OPTIONS=--daemon --duration 30s
+Environment=CONFIG_FILE=/opt/dbview/config.toml
+Type=simple
+User=root
+Group=root
+ExecStart="/opt/dbview/dbview" replicate --config "${CONFIG_FILE}" ${CMD_OPTIONS}
+
+[Install]
+WantedBy=multi-user.target
