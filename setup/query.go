@@ -60,23 +60,6 @@ BEGIN
 	INTO	last_transactionlog
 	FROM	transactionlog;
 
-	RAISE LOG '(%) Validating last applied transaction', schema_name;
-
-	SELECT INTO query
-		FORMAT('SELECT COUNT(1) as total FROM transactionlog where trl_id = %s', last_transactionlog );
-
-	SELECT total INTO remote_transaction_count
-	FROM dblink(remote_connection_id, query)
-	 as t1(total bigint);
-
-	IF remote_transaction_count = 0 THEN
-		PERFORM public.dblink_disconnect(remote_connection_id);
-		RAISE EXCEPTION
-			'(%) Expected transaction % does not exist in remote host. Please contact the uMov.me Support Team to get a new dump!',
-			schema_name, (last_transactionlog + 1);
-	END IF;
-
-
 	-- Query to get deltas to be applied in local copy
 	SELECT INTO QUERY
 		FORMAT($QUERY$
