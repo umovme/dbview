@@ -36,4 +36,4 @@ nfpm:
     - deb
   files:
     "config.toml": "/etc/dbview/config.toml"
-		"systemd.service": "/usr/lib/systemd/system/dbview.service" 
+    "systemd.service": "/usr/lib/systemd/system/dbview.service" 
