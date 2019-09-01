@@ -1,6 +1,6 @@
 # DBView
 
-This project contains a CLI to to help our customers replicate their data on it own servers.
+This project contains a CLI to help our customers replicate their data on it own servers.
 
 ## Build Details
 
