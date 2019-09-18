@@ -49,7 +49,7 @@ BEGIN
 
 	RAISE LOG '(%) Stablishing REMOTE connection to uMov.me', schema_name;
 	-- Connect to the remote host (uMov.me)
-	PERFORM public.dblink_connect_u(remote_connection_id, remote_connection_info);
+	PERFORM public.dblink_connect(remote_connection_id, remote_connection_info);
 
 	-- Adjust local search_path
 	PERFORM set_config('search_path', schema_name || ', dbview, public', true);

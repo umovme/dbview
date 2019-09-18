@@ -81,7 +81,7 @@ Please contact us with you have any trouble.`,
 
 		log.Info("Fixing permissions")
 		abort(
-			setup.GrantRolesToUser(conn, customerUser, []string{viper.GetString("local-database.target_username")}))
+			setup.GrantRolesToUser(conn, customerUser, []string{viper.GetString("local-database.target_username"), viper.GetString("local-database.username")}))
 
 		log.Info("Updating the 'search_path'")
 		abort(
@@ -100,7 +100,7 @@ Please contact us with you have any trouble.`,
 		exists, err := setup.CheckIfSchemaExists(conn, "dbview")
 		abort(err)
 
-		restoreArgs := []string{"-Fc"}
+		restoreArgs := []string{"-Fc", "-O", "-x"}
 
 		if exists {
 			// if exists the dbview schema, this is not a first user schema on this database
