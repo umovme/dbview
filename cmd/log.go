@@ -3,13 +3,14 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"runtime"
 	"time"
 
-	"bitbucket.org/umovme/bootstrapper/helpers"
 	"github.com/go-playground/ansi"
 	"github.com/go-playground/log"
 	"github.com/spf13/viper"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var (
@@ -97,7 +98,7 @@ func (c *CollorHandler) Log(e log.Entry) {
 func setHandler() log.Handler {
 
 	// ugly messages on windows forces me to disable this pretty messages
-	if !helpers.IsTerminal() || runtime.GOOS == "windows" {
+	if !terminal.IsTerminal(int(os.Stdout.Fd())) || runtime.GOOS == "windows" {
 		return new(TextHandler)
 	}
 
