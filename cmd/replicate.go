@@ -67,6 +67,7 @@ var replicateCmd = &cobra.Command{
 				runReplicate()
 			}
 		}
+		updateReplicationFunc()
 		runReplicate()
 
 		log.Info("Done.")
