@@ -32,20 +32,24 @@ CREATE OR REPLACE FUNCTION do_replication_log(
 )
 RETURNS TEXT AS
 $$
+-- Version 0.7
 DECLARE
-	rDeltas 				RECORD;
-	remote_connection_id	TEXT;
-	applied_deltas 			INTEGER DEFAULT 0;
-	query					TEXT;
-	last_transactionlog		BIGINT;
-	remote_transaction_count		    BIGINT;
+	rDeltas 					RECORD;
+	remote_connection_id		TEXT;
+	applied_deltas 				INTEGER DEFAULT 0;
+	query						TEXT;
+	last_transactionlog			BIGINT;
+	remote_transaction_count 	BIGINT;
+	start_time 					TIMESTAMPTZ;
+	elapsed_time 				INTERVAL;
 BEGIN
 	-- LOCK to prevent concurrent running in the same environment
 	IF pg_try_advisory_lock(substr(schema_name,2)::bigint) IS FALSE THEN
 		RAISE EXCEPTION '(%) Replication already running for this customer', schema_name;
 	END IF;
 
-	remote_connection_id := 'do_remote_replication_log';
+	remote_connection_id 	:= 'do_remote_replication_log';
+	start_time 				:= clock_timestamp();
 
 	RAISE LOG '(%) Stablishing REMOTE connection to uMov.me', schema_name;
 	-- Connect to the remote host (uMov.me)
@@ -59,6 +63,11 @@ BEGIN
 	SELECT	COALESCE(max(trl_id), 0)
 	INTO	last_transactionlog
 	FROM	transactionlog;
+
+	RAISE LOG '(%) Cleaning up "transactionlog" older than %', schema_name, last_transactionlog;
+	DELETE
+	FROM 	transactionlog
+	WHERE 	trl_id < last_transactionlog;
 
 	-- Query to get deltas to be applied in local copy
 	SELECT INTO QUERY
@@ -100,9 +109,11 @@ $QUERY$, last_transactionlog, rows_limit);
 	PERFORM public.dblink_disconnect(remote_connection_id);
 	PERFORM pg_advisory_unlock(substr(schema_name,2)::bigint);
 
-	RAISE LOG '(%) Applied % deltas from dbview remote transactionlog table', schema_name, applied_deltas;
+	elapsed_time := clock_timestamp() - start_time;
 
-	RETURN format('(%s) Applied %s deltas from dbview remote transactionlog table', schema_name, applied_deltas::text);
+	RAISE LOG '(%) Applied % deltas from dbview remote transactionlog table (elapsed %)', schema_name, applied_deltas, elapsed_time;
+
+	RETURN format('(%s) Applied %s deltas from dbview remote transactionlog table (elapsed %s)', schema_name, applied_deltas::text, elapsed_time::text);
 END;
 $$
 LANGUAGE plpgsql;
