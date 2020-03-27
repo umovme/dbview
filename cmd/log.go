@@ -128,6 +128,6 @@ func setupLogger() {
 	}
 
 	if defaultTimeZoneErr {
-		log.Info("Default TZ", defaultTZ, " Not found. Falling back to local timezone.")
+		log.Info("Default TZ ", defaultTZ, " Not found. Falling back to local timezone.")
 	}
 }
