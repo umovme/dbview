@@ -39,11 +39,20 @@ For now, this CLI only implements a possibility to install a new server and upda
 
 ### Installation
 
+Database extensions required:
+```
+dblink
+hstore
+postgis
+tablefunc
+unaccent
+```
+
 For the `install` process you need to input the dump file (sended by our support team), your customer id and the database credentials. For example:
 
 ```bash 
-$ dbview install -D ~/tmp/dbview_dump_customer_1329_20170131.pgbkp
-  INFO[0000] Using config file: /Users/sebastian/.dbview.toml
+$ dbview install --config /tmp/dbview.toml /tmp/dbview_dump_customer_1329_20170131.pgbkp
+  INFO[0000] Using config file: /tmp/dbview.toml
   INFO[0000] INSTALLING DBVIEW AND DEPENDENCIES
   INFO[0000] Validating parameters...
   INFO[0000] STARTING UP
@@ -95,8 +104,8 @@ Global Flags:
 For the `replicate` process you need configure the `config.toml` adjuting the `[remote-database]` section then run:
 
 ```bash 
-$ dbview replicate
-  INFO[0000] Using config file: /Users/sebastian/.dbview.toml
+$ dbview replicate --config /tmp/dbview.toml
+  INFO[0000] Using config file: /tmp/dbview.toml
   INFO[0000] Updating Replication Data...
   INFO[0001] Done.
 ```
