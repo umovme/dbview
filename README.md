@@ -51,7 +51,7 @@ unaccent
 For the `install` process you need to input the dump file (sended by our support team), your customer id and the database credentials. For example:
 
 ```bash 
-$ dbview install --config /tmp/dbview.toml /tmp/dbview_dump_customer_1329_20170131.pgbkp
+$ dbview install --config /tmp/dbview.toml --dump-file /tmp/dbview_dump_customer_1329_20170131.pgbkp
   INFO[0000] Using config file: /tmp/dbview.toml
   INFO[0000] INSTALLING DBVIEW AND DEPENDENCIES
   INFO[0000] Validating parameters...
