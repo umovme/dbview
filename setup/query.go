@@ -60,14 +60,12 @@ BEGIN
 
 	RAISE LOG '(%) Getting last applied transaction to check your DBView replica consistency', schema_name;
 	-- Get Last Applied TransactionLog
-	SELECT	COALESCE(max(trl_id), 0)
-	INTO	last_transactionlog
-	FROM	transactionlog;
-
+	EXECUTE FORMAT('SELECT  COALESCE(max(trl_id), 0) FROM %I.transactionlog', schema_name)
+	INTO  last_transactionlog;
+  
 	RAISE LOG '(%) Cleaning up "transactionlog" older than %', schema_name, last_transactionlog;
-	DELETE
-	FROM 	transactionlog
-	WHERE 	trl_id < last_transactionlog;
+
+	EXECUTE FORMAT('DELETE FROM  %I.transactionlog  WHERE trl_id < %L', schema_name, last_transactionlog);
 
 	-- Query to get deltas to be applied in local copy
 	SELECT INTO QUERY
@@ -77,11 +75,11 @@ SELECT
   trl_datehour,
   CASE WHEN trl_statements ~ '^BEGIN;' THEN substr(trl_statements, 8, length(trl_statements)-15) ELSE trl_statements END,
   trl_txid
-FROM transactionlog
+FROM %I.transactionlog
 WHERE trl_id > %s
 ORDER BY trl_id
 LIMIT %s;
-$QUERY$, last_transactionlog, rows_limit);
+$QUERY$, schema_name, last_transactionlog, rows_limit);
 
 	RAISE LOG '(%) Getting last % deltas do be applied in your local copy of DBView', schema_name, rows_limit;
 	FOR rDeltas IN
@@ -100,9 +98,9 @@ $QUERY$, last_transactionlog, rows_limit);
 
 		EXECUTE rDeltas.trl_statements;
 
-		INSERT INTO transactionlog(trl_id, trl_datehour, trl_statements, trl_txid)
-		VALUES (rDeltas.trl_id, rDeltas.trl_datehour, rDeltas.trl_statements, rDeltas.trl_txid);
-
+		EXECUTE FORMAT('INSERT INTO %I.transactionlog(trl_id, trl_datehour, trl_statements, trl_txid) VALUES (%s,%L,%L,%s)',
+		schema_name, rDeltas.trl_id, rDeltas.trl_datehour, rDeltas.trl_statements, rDeltas.trl_txid);
+  
 		applied_deltas := applied_deltas + 1;
 	END LOOP;
 
