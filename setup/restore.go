@@ -1,10 +1,14 @@
 package setup
 
 import (
+	"archive/tar"
 	"bytes"
+	"compress/gzip"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/go-playground/log"
 )
@@ -12,6 +16,92 @@ import (
 // RestoreOptions : Define the options for restore a dump file into a database
 type RestoreOptions struct {
 	CustomArgs []string
+}
+/*
+RestoreSQLFile : Calls the 'psql' to restore a gzipped file gererated by pg_dump + gzip
+*/
+func RestoreSQLFile(connDetail ConnectionDetails, dumpFile string, exists bool) error {
+	//
+	// new dumfile format:
+	//
+	// ---------------------------------------------------------------------
+	// |                            tar file                               |
+	// ---------------------------------------------------------------------
+	// |   internal_dump_schema_dbview.gz | internal_dump_schema_user.gz   |
+	// ---------------------------------------------------------------------
+
+	psqlBin := "psql"
+	psqlArgs := []string{"-v", "ON_ERROR_STOP=1", "-1", "-X"}
+	psqlConn := formatConnectionOptions(connDetail)
+
+	if pgsqlBinPATH != "" {
+		psqlBin = fmt.Sprintf("%s/psql", pgsqlBinPATH)
+	}
+
+	psqlArgs = append(psqlArgs, psqlConn...)
+
+	if connDetail.Password != "" {
+		err := os.Setenv("PGPASSWORD", connDetail.Password)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	log.Debugf("%s %#v\n", psqlBin, psqlArgs)
+
+	f, err := os.Open(dumpFile)
+	defer f.Close()
+
+	if err != nil {
+		return err
+	}
+
+	tarFile := tar.NewReader(f)
+
+	for {
+		var out bytes.Buffer
+		var stderr bytes.Buffer
+		psqlCmd := exec.Command(psqlBin, psqlArgs...)
+		psqlCmd.Stdout = &out
+		psqlCmd.Stderr = &stderr
+
+		hdr, err := tarFile.Next()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return err
+		}
+
+		log.Debugf("restoring: %s", hdr.Name)
+		if exists && strings.HasPrefix(hdr.Name, "internal_dump_schema_dbview") {
+			log.Warn("dbview schema already exists, ignoring to restore it")
+			continue
+		} else {
+			reader, err := gzip.NewReader(tarFile)
+
+			if err != nil {
+				return err
+			}
+
+			psqlCmd.Stdin = reader
+
+			if err := psqlCmd.Run(); err != nil {
+				return fmt.Errorf(
+					fmt.Sprintf(
+						"%s. %s\nCMD: %s %s",
+						fmt.Sprint(err),
+						stderr.String(),
+						psqlBin,
+						psqlArgs))
+			}
+		}
+	}
+
+	return nil
 }
 
 /*
