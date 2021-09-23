@@ -32,6 +32,8 @@ package cmd
 
 import (
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/spf13/viper"
 
@@ -100,16 +102,7 @@ Please contact us with you have any trouble.`,
 		exists, err := setup.CheckIfSchemaExists(conn, "dbview")
 		abort(err)
 
-		restoreArgs := []string{"-Fc", "-O", "-x"}
-
-		if exists {
-			// if exists the dbview schema, this is not a first user schema on this database
-			// then just create a new schema and restore only it
-			abort(
-				setup.CreateSchema(conn, customerUser))
-
-			restoreArgs = append(restoreArgs, fmt.Sprintf("--schema=%s", customerUser))
-		}
+		restoreArgs := []string{"-Fc", "-O", "-x", "-e"}
 
 		pgPath := viper.GetString("pgsql-bin")
 
@@ -118,13 +111,56 @@ Please contact us with you have any trouble.`,
 		}
 
 		log.Info("Restoring the dump file")
-		abort(
-			setup.RestoreDumpFile(conn, pDumpFile, setup.RestoreOptions{CustomArgs: restoreArgs}))
+
+		switch detectDumpType() {
+		case "dumpFormatV1":
+			if exists {
+				// if dbview schema exists, this is not a first user schema
+				// on this database then just create a new schema and restore
+				// only it
+				abort(
+					setup.CreateSchema(conn, customerUser))
+
+				restoreArgs = append(restoreArgs, fmt.Sprintf("--schema=%s", customerUser))
+			}
+
+			abort(
+				setup.RestoreDumpFile(conn, pDumpFile, setup.RestoreOptions{CustomArgs: restoreArgs}))
+		case "dumpFormatV2":
+			// first try the new-method
+			abort(
+				setup.RestoreSQLFile(conn, pDumpFile, exists))
+
+		}
 
 		updateReplicationFunc()
 
 		log.Info("Done.")
 	},
+}
+
+func detectDumpType() string {
+	f, _ := os.Open(pDumpFile)
+	defer f.Close()
+
+	buf := make([]byte, 5)
+	_, err := io.ReadFull(f, buf)
+
+	if err != nil {
+		log.Fatal("Wrong dump file size!")
+	}
+
+	if string(buf) == "inter" {
+		log.Debug("New dump file format detected!")
+		return "dumpFormatV2"
+	} else if string(buf) == "PGDMP" {
+		log.Warn("Old dump file format detected! This format will be deprecated!")
+		return "dumpFormatV1"
+	} else {
+		log.Fatal("Wrong dump file type!")
+	}
+
+	return ""
 }
 
 func checkInputParameters() (ok bool) {
