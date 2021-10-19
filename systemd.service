@@ -9,6 +9,7 @@ Type=simple
 User=root
 Group=root
 ExecStart="/opt/dbview/dbview" replicate --config "${CONFIG_FILE}" ${CMD_OPTIONS}
+SyslogIdentifier="SERVICE_NAME"
 
 [Install]
 WantedBy=multi-user.target
