@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 TAG="v${1}"
 
