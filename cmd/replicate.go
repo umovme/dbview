@@ -90,6 +90,7 @@ func runReplicate() {
 		Database: viper.GetString("local-database.target_database"),
 		SslMode:  viper.GetString("local-database.ssl"),
 		Password: viper.GetString("local-database.password"),
+		AppName: "local",
 	}
 
 	log.Debugf("Using local connection with '%s'", localConn.ToString())
@@ -101,6 +102,7 @@ func runReplicate() {
 		Database: viper.GetString("remote-database.database"),
 		SslMode:  viper.GetString("remote-database.ssl"),
 		Password: viper.GetString("remote-database.password"),
+		AppName:  "dbview_client_" + viper.GetString("customer"),
 	}
 
 	log.Debugf("Using remote connection with '%s'", remoteConn.ToString())

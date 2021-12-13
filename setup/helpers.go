@@ -23,6 +23,7 @@ type ConnectionDetails struct {
 	Database string
 	SslMode  string
 	Port     int
+	AppName  string
 }
 
 var c *ConnectionDetails
@@ -55,6 +56,10 @@ func (c ConnectionDetails) ToString() string {
 
 	if c.Port > 0 {
 		returnData += fmt.Sprintf("port=%d ", c.Port)
+	}
+
+	if c.AppName != "" {
+		returnData += fmt.Sprintf("application_name=%s ", c.AppName)
 	}
 
 	return strings.Trim(returnData, " ")

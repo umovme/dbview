@@ -17,9 +17,10 @@ var _ = Describe("Setup database user and groups", func() {
 			Database: "dbview_tests",
 			SslMode:  "disable",
 			Password: "superTest!",
-			Port:     5432}
+			Port:     5432,
+			AppName: "teste"}
 
-		sampleConnString = "user=dbview_tests password=superTest! dbname=dbview_tests sslmode=disable port=5432"
+		sampleConnString = "user=dbview_tests password=superTest! dbname=dbview_tests sslmode=disable port=5432 application_name=teste"
 
 		testUserName  = "dbview"
 		wrongUserName = "missing_user_for_this_database"
