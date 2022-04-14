@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    env_file: ./config/.env
+    build: 
+      context: ./config
+      dockerfile: Dockerfile
+    image: dbview_umov
+    restart: always
+    ports:
+        - 5432:5432
+    volumes: 
+       -  ./pgdata:/var/lib/postgresql/data
+       
+  dbview-install:
+      env_file: ./config/.env
+      image: dbview_umov
+      volumes:
+         - ./config:/volume/
+      command:  dbview install  --config /volume/config.toml --dump-file /volume/dbview.pgbkp --force-cleanup 
+
+  dbview-replicate:
+      env_file: ./config/.env
+      image: dbview_umov
+      restart: always
+      volumes:
+         - './config:/volume/'
+      command: dbview replicate --config /volume/config.toml --daemon --refresh-interval 30s  
+

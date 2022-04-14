@@ -1,0 +1,32 @@
+# DBView configuration file
+
+customer = <XXXXXX> #CHANGE
+
+## on windows path, use the '/', eg:
+# pgsql-bin = "C:/Program Files/PostgreSQL/9.3/bin"
+
+
+[local-database]
+ssl = "disable"
+username = "postgres"
+password = "<YOUR PASSWORD>" #CHANGE ACCORDING .env FILE
+host = "db"
+database = "postgres"
+port = 5432
+target_username = "dbview"
+target_database = "dbview_cascated" #CHANGE ACCORDING .env FILE
+
+
+
+## You can get the user and password with our support team.
+[remote-database]
+ssl = "disable"
+username = "uXXXXX" #CHANGE
+password = "<YOUR PASSWORD>" #CHANGE
+host = "dbview.umov.me"
+database = "prod_umov_dbview"
+port = 9999
+
+
+[options]
+row_limit = 10000
