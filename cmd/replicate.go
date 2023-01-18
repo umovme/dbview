@@ -41,7 +41,7 @@ import (
 )
 
 const (
-	daemonInterval = 30 * time.Second
+	daemonInterval = 3 * time.Second
 	maxRowsAllowed = 10000
 )
 

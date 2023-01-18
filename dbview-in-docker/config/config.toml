@@ -3,7 +3,7 @@
 customer = <XXXXXX> #CHANGE
 
 ## on windows path, use the '/', eg:
-# pgsql-bin = "C:/Program Files/PostgreSQL/9.3/bin"
+# pgsql-bin = "C:/Program Files/PostgreSQL/14/bin"
 
 
 [local-database]
