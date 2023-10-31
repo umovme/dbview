@@ -173,6 +173,29 @@ Then reload systemd configurations to use your service:
 systemctl daemon-reload
 ```
 
+## PostgreSQL and AWS RDS/AURORA tips
+
+New postgreSQL versions have by default scram-sha-256 password encriptation. This client works with MD5 encriptation. Then, you need to change this parameter. 
+On dedicated instance, you need just to run 
+```SQL 
+alter system set password_encriptation to md5; select pg_reload_conf(); 
+```
+or edit postgresql.conf and change the parameter.  
+
+At RDS/Aurora instances:
+ Do you need to create a custom parameter group and change the parameter password_encriptation to MD5
+
+Another thing that you need to notice, is about SSL conections. By default client connects with SSL OFF (has a parameter on config.toml)
+
+Do you need to test the connection. Do you need to try connect database using PSQL in your dbview client instance.
+
+IF the connection is suscessfull, take a look as connection messages. If it shows some TLS version, it means that by default your database instance is using secure connection.
+
+To test insecure connection (ssl off), do you need to do this steps:
+ - run ```export PGSSLMODE=disable```
+ - try to connect by psql again. If the connection was suscessfull, your database instance works with ssl off connections too.
+
+ If it doesn't works, you need to change de parameter rds_sslmode to 0 in parameter group.
 
 ## Getting support
 
