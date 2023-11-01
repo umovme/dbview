@@ -175,15 +175,15 @@ systemctl daemon-reload
 
 ## PostgreSQL and AWS RDS/AURORA tips
 
-New postgreSQL versions have by default scram-sha-256 password encriptation. This client works with MD5 encriptation. Then, you need to change this parameter. 
+New postgreSQL versions have by default scram-sha-256 password encryption. This client works with MD5 encryption. Then, you need to change this parameter. 
 On dedicated instance, you need just to run 
 ```SQL 
-alter system set password_encriptation to md5; select pg_reload_conf(); 
+alter system set password_encryption to md5; select pg_reload_conf(); 
 ```
 or edit postgresql.conf and change the parameter.  
 
 At RDS/Aurora instances:
- Do you need to create a custom parameter group and change the parameter password_encriptation to MD5
+ Do you need to create a custom parameter group and change the parameter password_encryption to MD5
 
 Another thing that you need to notice, is about SSL conections. By default client connects with SSL OFF (has a parameter on config.toml)
 
