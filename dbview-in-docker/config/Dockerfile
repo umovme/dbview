@@ -2,7 +2,7 @@ FROM postgres:14-bullseye
 
 LABEL maintainer="PostGIS Project - https://postgis.net"
 
-ENV DBVIEW_VERSION "0.8.1"
+ENV DBVIEW_VERSION "0.8.2"
 ENV POSTGIS_MAJOR 3
 ENV POSTGIS_VERSION 3.5.2+dfsg-1.pgdg110+1
 
