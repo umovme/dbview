@@ -25,5 +25,5 @@ services:
       restart: always
       volumes:
          - './config:/volume/'
-      command: dbview replicate --config /volume/config.toml --daemon --refresh-interval 30s  
+      command: dbview replicate --config /volume/config.toml --daemon   
 
